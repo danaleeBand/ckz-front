@@ -2,10 +2,11 @@
 export default {
   content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
   theme: {
-    color: {
+    colors: {
       white: '#ffffff',
       black: '#000000',
       transparent: 'transparent',
+      current: 'currentColor',
 
       // theme main color
       primary: '#6457a6',
