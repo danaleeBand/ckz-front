@@ -74,6 +74,8 @@ module.exports = {
     'react/require-default-props': 1, // defaultProps 사용
     'no-alert': 0, // alert 사용 허용
     'jsx-a11y/click-events-have-key-events': 0, // 클릭 이벤트에 키 이벤트 추가
+    'react/require-default-props': 0, // defaultProps 사용
+    'react/jsx-no-useless-fragment': 0, // 불필요한 Fragment 사용
   },
   settings: {
     'import/resolver': {

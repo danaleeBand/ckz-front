@@ -1,12 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { TestPage, TestTestPage } from '@/pages';
+import { LoginPage } from '@/pages';
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<TestPage />} />
-      <Route path='/test' element={<TestTestPage />} />
+      <Route path='/' element={<LoginPage />} />
     </Routes>
   );
 }

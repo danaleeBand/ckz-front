@@ -59,6 +59,9 @@ export default {
     },
   },
   plugins: [],
+  corePlugins: {
+    preflight: true,
+  },
   darkMode: false,
   variants: {},
 };
