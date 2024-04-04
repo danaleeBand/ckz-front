@@ -11,7 +11,7 @@ export type TextFieldType = 'text' | 'number' | 'password';
 
 export type TextFieldProps = {
   type?: TextFieldType;
-  isValid?: TextFieldStatus; // validation 결과
+  validationResult?: TextFieldStatus; // validation 결과
   placeholder?: string;
   value?: string;
   onChange?: (value: string | number) => void;
@@ -28,7 +28,7 @@ export const TextField = ({
   onChange,
   placeholder,
   helperText,
-  isValid,
+  validationResult,
   textLimit,
   className,
   width = 64,
@@ -54,24 +54,24 @@ export const TextField = ({
 
   // validation 결과에 따른 스타일, 아이콘
   const statusStyle = useMemo(() => {
-    if (isValid === 'error') {
+    if (validationResult === 'error') {
       return 'pr-7 border-error';
     }
-    if (isValid === 'warning') {
+    if (validationResult === 'warning') {
       return 'pr-7 border-warning';
     }
-    if (isValid === 'confirm') {
+    if (validationResult === 'confirm') {
       return 'pr-7 border-confirm';
     }
     return '';
-  }, [isValid]);
+  }, [validationResult]);
 
   const statusIcon = useMemo(() => {
     const statusIconStyle = `
       ${isFocus ? 'visible' : 'invisible'}
       absolute right-2 top-2
     `;
-    if (isValid === 'error') {
+    if (validationResult === 'error') {
       return (
         <FontAwesomeIcon
           icon={faExclamationCircle}
@@ -79,7 +79,7 @@ export const TextField = ({
         />
       );
     }
-    if (isValid === 'warning') {
+    if (validationResult === 'warning') {
       return (
         <FontAwesomeIcon
           icon={faExclamationTriangle}
@@ -87,7 +87,7 @@ export const TextField = ({
         />
       );
     }
-    if (isValid === 'confirm') {
+    if (validationResult === 'confirm') {
       return (
         <FontAwesomeIcon
           icon={faCheckCircle}
@@ -96,7 +96,7 @@ export const TextField = ({
       );
     }
     return <></>;
-  }, [isFocus, isValid]);
+  }, [isFocus, validationResult]);
 
   return (
     <div className={`flex flex-col gap-0.5 w-${width}`}>
@@ -111,7 +111,7 @@ export const TextField = ({
           text-basic text-ellipsis
           border-1 border-solid border-primary rounded-lg
           focus:outline-none focus:shadow-md
-          ${isValid && isFocus ? statusStyle : ''}
+          ${validationResult && isFocus ? statusStyle : ''}
           disabled:bg-bg-primary-darker disabled:text-text-primary-light disabled:border-primary-lighter
           ${className}
         `}
@@ -121,7 +121,7 @@ export const TextField = ({
           value={text}
           disabled={disabled}
         />
-        {isValid && statusIcon}
+        {validationResult && statusIcon}
       </div>
       <p className={'text-xs text-text-primary-light px-1'}>{helperText}</p>
     </div>

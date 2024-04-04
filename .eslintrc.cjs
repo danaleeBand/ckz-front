@@ -1,17 +1,7 @@
 module.exports = {
   root: true,
   env: { browser: true, es2021: true, node: true, jest: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:react-hooks/recommended',
-    'airbnb',
-    'airbnb/hooks',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:prettier/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:react-hooks/recommended', 'airbnb', 'airbnb/hooks', 'plugin:import/errors', 'plugin:import/warnings', 'plugin:prettier/recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:storybook/recommended'],
   ignorePatterns: [
     'dist',
     '.eslintrc.cjs',

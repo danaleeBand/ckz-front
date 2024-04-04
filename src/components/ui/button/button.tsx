@@ -50,7 +50,8 @@ export const Button = ({
   } as Record<string, string>;
 
   const customStyle = `
-    flex items-center justify-center gap-1.5
+    flex flex-row items-center justify-center 
+    gap-1.5
     box-border
     font-bold
     border-1 border-solid 
@@ -66,7 +67,7 @@ export const Button = ({
       onClick={onClick}
     >
       {icon && iconPosition === 'start' && icon}
-      {labelText}
+      <div className='flex justify-center items-center'>{labelText}</div>
       {icon && iconPosition === 'end' && icon}
     </button>
   );

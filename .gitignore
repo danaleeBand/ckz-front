@@ -32,3 +32,4 @@ sketch
 *.njsproj
 *.sln
 *.sw?
+*storybook.log
