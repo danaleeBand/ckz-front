@@ -37,6 +37,8 @@
   
   "arrowParens": "avoid",
 
+  "bracketSameLine": false,
+
   "overrides": [
     {
       "files": "*.json",
