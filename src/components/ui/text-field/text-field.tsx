@@ -54,6 +54,9 @@ export const TextField = ({
 
   // validation 결과에 따른 스타일, 아이콘
   const statusStyle = useMemo(() => {
+    if (!validationResult || !isFocus) {
+      return 'border-primary ';
+    }
     if (validationResult === 'error') {
       return 'pr-7 border-error';
     }
@@ -63,8 +66,7 @@ export const TextField = ({
     if (validationResult === 'confirm') {
       return 'pr-7 border-confirm';
     }
-    return '';
-  }, [validationResult]);
+  }, [validationResult, isFocus]);
 
   const statusIcon = useMemo(() => {
     const statusIconStyle = `
@@ -100,18 +102,18 @@ export const TextField = ({
 
   return (
     <div className={`flex flex-col gap-0.5 w-${width}`}>
-      <div className={'relative'}>
+      <div className={'relative w-full'}>
         <input
           type={type === 'password' ? 'password' : 'text'}
           placeholder={placeholder}
           className={`
         bg-bg-primary
           box-border w-full
-          px-2.5 py-1.5
+          px-2.5 py-1.5 align-middle
           text-basic text-ellipsis
-          border-1 border-solid border-primary rounded-lg
+          border-1 border-solid rounded-lg
           focus:outline-none focus:shadow-md
-          ${validationResult && isFocus ? statusStyle : ''}
+          ${statusStyle}
           disabled:bg-bg-primary-darker disabled:text-text-primary-light disabled:border-primary-lighter
           ${className}
         `}
