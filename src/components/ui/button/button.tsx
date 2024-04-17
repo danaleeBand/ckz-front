@@ -24,22 +24,22 @@ export const Button = ({
   disabled,
 }: ButtonProps) => {
   const containedStyle = `
+    text-text-inverse border-none shadow-md
     ${
       color === 'primary'
         ? 'bg-primary hover:bg-primary-dark active:bg-primary-darker'
         : 'bg-secondary hover:bg-secondary-dark active:bg-secondary-darker'
     }
-    text-text-primary-inverse
-    border-none
-    shadow-md
   `;
 
   const outlinedStyle = `
-    bg-bg-primary hover:bg-bg-primary-dark active:bg-bg-primary-darker
+    bg-bg-basic hover:bg-bg-dark active:bg-bg-darker
     ${
       color === 'primary'
-        ? 'text-primary border-primary hover:border-primary-dark hover:text-primary-dark active:border-primary-dark active:text-primary-dark'
-        : 'text-secondary border-secondary hover:border-secondary-dark hover:text-secondary-dark active:border-secondary-dark active:text-secondary-dark'
+        ? `text-text-primary border-primary hover:border-primary-dark hover:text-text-primary-dark 
+           active:border-primary-dark active:text-text-primary-dark`
+        : `text-text-secondary border-secondary hover:border-secondary-dark 
+           hover:text-text-secondary-dark active:border-secondary-dark active:text-secondary-dark`
     }
   `;
 

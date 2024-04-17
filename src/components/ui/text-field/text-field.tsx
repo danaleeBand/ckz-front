@@ -5,6 +5,7 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 export type TextFieldStatus = 'error' | 'warning' | 'confirm';
 export type TextFieldType = 'text' | 'number' | 'password';
@@ -105,14 +106,14 @@ export const TextField = ({
           type={type === 'password' ? 'password' : 'text'}
           placeholder={placeholder}
           className={`
-        bg-bg-primary
+          bg-bg-basic
           box-border w-full
           px-2.5 py-1.5
-          text-basic text-ellipsis
+          text-text-basic text-basic text-ellipsis
           border-1 border-solid border-primary rounded-lg
           focus:outline-none focus:shadow-md
           ${validationResult && isFocus ? statusStyle : ''}
-          disabled:bg-bg-primary-darker disabled:text-text-primary-light disabled:border-primary-lighter
+          disabled:bg-bg-darker disabled:text-text-lighter
           ${className}
         `}
           onChange={handleChange}
@@ -123,7 +124,7 @@ export const TextField = ({
         />
         {validationResult && statusIcon}
       </div>
-      <p className={'text-xs text-text-primary-light px-1'}>{helperText}</p>
+      <p className={'text-xs text-text-lighter px-1'}>{helperText}</p>
     </div>
   );
 };
