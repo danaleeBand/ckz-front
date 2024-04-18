@@ -36,6 +36,7 @@ sketch
 
 # yarn berry
 .pnp.*
+.yarn
 .yarn/*
 !.yarn/cache
 !.yarn/patches
@@ -43,3 +44,4 @@ sketch
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.yarn/install-state.gz
