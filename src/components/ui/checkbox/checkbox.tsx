@@ -35,12 +35,13 @@ export const Checkbox = ({
         id='custom-checkbox-input'
         className={`
         appearance-none shrink-0 
-        w-4 h-4 bg-bg-primary
-        rounded-sm border-text-primary-lighter border-1 border-solid
-      checked:bg-primary checked:border-0 
-      checked:hover:bg-primary-light
-      indeterminate:bg-primary indeterminate:border-0
-      indeterminate:hover:bg-primary-light
+        w-4 h-4 bg-bg-basic dark:bg-dark-bg-basic
+        hover:bg-bg-dark dark:hover:bg-dark-bg-light
+        rounded-sm border-border-primary border-1 border-solid
+      checked:bg-bg-primary dark:checked:bg-dark-bg-primary checked:border-0 
+      checked:hover:bg-bg-primary-light dark:checked:hover:bg-dark-bg-primary-light
+      indeterminate:bg-bg-primary dark:indeterminate:bg-dark-bg-primary indeterminate:border-0
+      indeterminate:hover:bg-bg-primary-light dark:indeterminate:hover:bg-dark-bg-primary-light
         cursor-pointer
         ${className}
       `}
@@ -51,19 +52,21 @@ export const Checkbox = ({
       />
       {isChecked && !indeterminate && (
         <FontAwesomeIcon
-          className='absolute w-4 h-4 text-white pointer-events-none peer-checked:block outline-none'
+          className={`absolute w-4 h-4 text-text-inverse dark:text-dark-text-inverse 
+            pointer-events-none peer-checked:block outline-none`}
           icon={faCheck}
         />
       )}
       {indeterminate && (
         <FontAwesomeIcon
-          className='absolute w-4 h-4 text-white pointer-events-none peer-checked:block outline-none'
+          className={`absolute w-4 h-4 text-text-inverse dark:text-dark-text-inverse 
+            pointer-events-none peer-checked:block outline-none`}
           icon={faMinus}
         />
       )}
       {label && (
         <label
-          className='cursor-pointer h-5 text-text-primary text-sm align-middle'
+          className='cursor-pointer h-5 text-text-basic dark:text-dark-text-basic text-sm align-middle'
           htmlFor={'custom-checkbox-input'}
         >
           {label}
