@@ -5,7 +5,6 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 
 export type TextFieldStatus = 'error' | 'warning' | 'confirm';
 export type TextFieldType = 'text' | 'number' | 'password';
@@ -55,6 +54,12 @@ export const TextField = ({
 
   // validation 결과에 따른 스타일, 아이콘
   const statusStyle = useMemo(() => {
+    if (!validationResult || !isFocus) {
+      return 'border-primary ';
+    }
+    if (!validationResult || !isFocus) {
+      return 'border-primary ';
+    }
     if (validationResult === 'error') {
       return 'pr-7 border-error';
     }
@@ -65,7 +70,7 @@ export const TextField = ({
       return 'pr-7 border-confirm';
     }
     return '';
-  }, [validationResult]);
+  }, [validationResult, isFocus]);
 
   const statusIcon = useMemo(() => {
     const statusIconStyle = `
@@ -101,18 +106,18 @@ export const TextField = ({
 
   return (
     <div className={`flex flex-col gap-0.5 w-${width}`}>
-      <div className={'relative'}>
+      <div className={'relative w-full'}>
         <input
           type={type === 'password' ? 'password' : 'text'}
           placeholder={placeholder}
           className={`
           bg-bg-basic
           box-border w-full
-          px-2.5 py-1.5
+          px-2.5 py-1.5 align-middle
           text-text-basic text-basic text-ellipsis
           border-1 border-solid border-primary rounded-lg
           focus:outline-none focus:shadow-md
-          ${validationResult && isFocus ? statusStyle : ''}
+          ${statusStyle}
           disabled:bg-bg-darker disabled:text-text-lighter
           ${className}
         `}
