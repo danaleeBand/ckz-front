@@ -5,7 +5,10 @@ import KakaoLogo from '@/assets/kakao-logo.svg?react';
 export const LoginPage = () => {
   return (
     <div className='flex flex-row w-screen h-screen'>
-      <div className='flex flex-col gap-6 w-2/5 pt-60 shadow-2xl z-10 bg-bg-elevated dark:bg-dark-bg-elevated'>
+      <div
+        className={`flex flex-col gap-6 w-2/5 pt-60 shadow-2xl z-10 
+        bg-bg-elevated dark:bg-dark-bg-elevated`}
+      >
         <div className='flex justify-center'>
           <img src='/images/checkuiz-logo.png' alt='logo' className='w-96' />
         </div>

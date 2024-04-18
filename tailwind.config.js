@@ -2,7 +2,7 @@ import {
   GREY_SCALE_COLOR,
   PRIMARY_COLOR,
   SECONDARY_COLOR,
-} from './src/constants/color';
+} from './src/constants';
 
 /** @type {import('tailwindcss').Config} */
 export default {
