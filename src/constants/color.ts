@@ -23,15 +23,15 @@ export const GREY_SCALE_COLOR = {
 } as Record<number, string>;
 
 export const PRIMARY_COLOR = {
-  100: '#c4bee5',
-  200: '#a4a2cd',
-  300: '#8576b6',
-  400: '#67599f',
+  100: '#a19bbd',
+  200: '#8c89aa',
+  300: '#776698',
+  400: '#6c5fa0',
   500: '#6457a6',
-  600: '#3d3d7c',
-  700: '#2f2f64',
-  800: '#20204b',
-  900: '#121232',
+  600: '#58508e',
+  700: '#3d3d7c',
+  800: '#32326a',
+  900: '#272757',
 } as Record<number, string>;
 
 export const SECONDARY_COLOR = {
