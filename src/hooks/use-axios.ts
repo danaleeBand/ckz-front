@@ -26,6 +26,7 @@ export const useAxios = (axiosParams: AxiosRequestConfig) => {
     if (axiosParams.method === 'GET' || axiosParams.method === 'get') {
       fetchData(axiosParams);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sendData = () => {

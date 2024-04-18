@@ -1,7 +1,18 @@
 module.exports = {
   root: true,
   env: { browser: true, es2021: true, node: true, jest: true },
-  extends: ['eslint:recommended', 'plugin:react-hooks/recommended', 'airbnb', 'airbnb/hooks', 'plugin:import/errors', 'plugin:import/warnings', 'plugin:prettier/recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:storybook/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react-hooks/recommended',
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
   ignorePatterns: [
     'dist',
     '.eslintrc.cjs',
@@ -22,7 +33,8 @@ module.exports = {
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     ], // jsx 파일 확장자 .jx, .jsx, .ts, .tsx 허용
     'arrow-parens': [1, 'as-needed'], // 화살표 함수의 파라미터가 하나일때 괄호 생략
-    'no-unused-vars': 1, // 사용하지 않는 변수가 있을 때 발생하는 경고
+    'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': 1,
     'no-console': 0, // 콘솔 사용 시 발생하는 경고 비활성화
     'import/prefer-default-export': 0, // export문이 하나일 때 default export 사용 권장 경고 비활성화
     'react-hooks/exhaustive-deps': 1, // react hooks의 의존성배열이 충분하지 않을 때 경고 표시

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 export type CheckboxProps = {
   checked: boolean;
   indeterminate?: boolean;
-  onChange?: (checked: boolean) => void;
+  onChange?: (_: boolean) => void;
   label?: string;
   className?: string;
 };

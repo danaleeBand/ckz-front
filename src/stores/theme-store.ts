@@ -6,7 +6,7 @@ const { THEME_DARK, THEME_LIGHT } = THEME_TYPES;
 
 export type ThemeStore = {
   theme: string;
-  setTheme: (newTheme: string) => void;
+  setTheme: (_: string) => void;
 };
 
 export const useThemeStore = create(

@@ -14,7 +14,7 @@ export type TextFieldProps = {
   validationResult?: TextFieldStatus; // validation 결과
   placeholder?: string;
   value?: string;
-  onChange?: (value: string | number) => void;
+  onChange?: (_: string | number) => void;
   helperText?: string;
   textLimit?: number; // value의 글자수 제한
   className?: string;
