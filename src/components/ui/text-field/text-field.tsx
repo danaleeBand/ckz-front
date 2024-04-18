@@ -55,10 +55,7 @@ export const TextField = ({
   // validation 결과에 따른 스타일, 아이콘
   const statusStyle = useMemo(() => {
     if (!validationResult || !isFocus) {
-      return 'border-primary ';
-    }
-    if (!validationResult || !isFocus) {
-      return 'border-primary ';
+      return 'border-border-primary ';
     }
     if (validationResult === 'error') {
       return 'pr-7 border-error';
@@ -111,14 +108,15 @@ export const TextField = ({
           type={type === 'password' ? 'password' : 'text'}
           placeholder={placeholder}
           className={`
-          bg-bg-basic
+          bg-bg-basic dark:bg-dark-bg-basic
           box-border w-full
           px-2.5 py-1.5 align-middle
-          text-text-basic text-basic text-ellipsis
-          border-1 border-solid border-primary rounded-lg
+          text-basic text-ellipsis text-text-basic dark:text-dark-text-basic
+          border-1 border-solid rounded-lg border-border-primary dark:border-dark-border-primary 
           focus:outline-none focus:shadow-md
           ${statusStyle}
           disabled:bg-bg-darker disabled:text-text-lighter
+          dark:disabled:bg-dark-bg-light dark:disabled:text-dark-text-dark
           ${className}
         `}
           onChange={handleChange}
@@ -129,7 +127,11 @@ export const TextField = ({
         />
         {validationResult && statusIcon}
       </div>
-      <p className={'text-xs text-text-lighter px-1'}>{helperText}</p>
+      <p
+        className={'text-xs text-text-lighter dark:text-dark-text-darker px-1'}
+      >
+        {helperText}
+      </p>
     </div>
   );
 };
