@@ -9,10 +9,17 @@ export type ThemeStore = {
   setTheme: (_: string) => void;
 };
 
+const initialTheme =
+  localStorage.getItem('theme-store') === THEME_DARK ||
+  (!('theme-store' in localStorage) &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ? THEME_DARK
+    : THEME_LIGHT;
+
 export const useThemeStore = create(
   persist<ThemeStore>(
     set => ({
-      theme: THEME_LIGHT,
+      theme: initialTheme,
       setTheme: (newTheme: string) =>
         set({ theme: newTheme === THEME_DARK ? THEME_DARK : THEME_LIGHT }),
     }),
