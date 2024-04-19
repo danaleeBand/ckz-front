@@ -9,8 +9,11 @@ export type ThemeStore = {
   setTheme: (_: string) => void;
 };
 
+const storedTheme = localStorage.getItem('theme-store');
+const parsedTheme = storedTheme ? JSON.parse(storedTheme) : {};
+
 const initialTheme =
-  localStorage.getItem('theme-store') === THEME_DARK ||
+  parsedTheme?.state?.theme === THEME_DARK ||
   (!('theme-store' in localStorage) &&
     window.matchMedia('(prefers-color-scheme: dark)').matches)
     ? THEME_DARK
