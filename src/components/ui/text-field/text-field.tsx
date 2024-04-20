@@ -54,19 +54,16 @@ export const TextField = ({
 
   // validation 결과에 따른 스타일, 아이콘
   const statusStyle = useMemo(() => {
-    if (!validationResult || !isFocus) {
-      return 'border-border-primary ';
-    }
     if (validationResult === 'error') {
       return 'pr-7 border-error';
     }
-    if (validationResult === 'warning') {
+    if (isFocus && validationResult === 'warning') {
       return 'pr-7 border-warning';
     }
-    if (validationResult === 'confirm') {
+    if (isFocus && validationResult === 'confirm') {
       return 'pr-7 border-confirm';
     }
-    return '';
+    return 'border-border-primary';
   }, [validationResult, isFocus]);
 
   const statusIcon = useMemo(() => {
