@@ -4,7 +4,7 @@ import { Button } from '@/components/ui';
 import KakaoLogo from '@/assets/kakao-logo.svg?react';
 
 export const KakaoLoginButton = memo(() => {
-  const url = `${import.meta.env.VITE_BASE_URL}/auth/kakao`;
+  const url = `${import.meta.env.VITE_SERVER_BASE_URL}/auth/kakao`;
 
   return (
     <Button
