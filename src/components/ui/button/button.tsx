@@ -37,6 +37,7 @@ export const Button = ({
   const outlinedStyle = `
     bg-bg-basic active:bg-bg-dark
     dark:bg-dark-bg-elevated dark:hover:bg-dark-bg-basic dark:active:bg-dark-bg-basic
+    hover:shadow-md
     ${
       color === 'primary'
         ? `text-text-primary border-border-primary 
