@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Modal from 'react-modal';
 import './App.css';
-import { LoginPage, SignInPage } from '@/pages';
+import { Checklist, LoginPage, SignInPage } from '@/pages';
 
 function App() {
   Modal.setAppElement('#root');
@@ -19,6 +19,7 @@ function App() {
       />
       <Route path='/login' element={<></>} />
       <Route path='/join' element={<SignInPage />} />
+      <Route path='/:checklist-id' element={<Checklist />} />
     </Routes>
   );
 }
