@@ -18,7 +18,7 @@ export const LoginPage = () => {
       </div>
       <div className='flex bg-primary w-3/5 h-full z-0 justify-center items-center'>
         <img
-          src='/images/index_image.png'
+          src='/images/index-image.png'
           alt='login-example'
           className='w-full px-20'
         />
