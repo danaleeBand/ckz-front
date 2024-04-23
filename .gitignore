@@ -17,6 +17,10 @@ dist-ssr
 *.local
 *.sublime*
 
+# 환경변수
+.env
+.env.local
+
 psd
 thumb
 sketch

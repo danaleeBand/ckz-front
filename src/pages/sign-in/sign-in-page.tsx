@@ -1,0 +1,13 @@
+import { SignInHeader } from './sign-in-header';
+import { SignInForm } from './form';
+
+export const SignInPage = () => {
+  return (
+    <div className='w-screen h-screen'>
+      <SignInHeader />
+      <div className='flex justify-center mt-16'>
+        <SignInForm />
+      </div>
+    </div>
+  );
+};

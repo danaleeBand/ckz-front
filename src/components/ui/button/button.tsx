@@ -37,6 +37,7 @@ export const Button = ({
   const outlinedStyle = `
     bg-bg-basic active:bg-bg-dark
     dark:bg-dark-bg-elevated dark:hover:bg-dark-bg-basic dark:active:bg-dark-bg-basic
+    hover:shadow-md
     ${
       color === 'primary'
         ? `text-text-primary border-border-primary 
@@ -55,9 +56,9 @@ export const Button = ({
   `;
 
   const sizeStyle = {
-    small: 'px-2 py-1 text-xs h-8 rounded-lg min-w-8 min-h-8',
-    medium: 'px-2.5 py-1.5 text-basic h-9 rounded-lg min-w-9 min-h-9',
-    large: 'px-5 py-2 text-basic h-10 rounded-xl min-w-10 min-h-10',
+    small: 'px-2 py-1 text-xs h-7 rounded-lg min-w-7 min-h-7',
+    medium: 'px-2.5 py-1.5 text-basic h-8 rounded-lg min-w-8 min-h-8',
+    large: 'px-5 py-2 text-basic h-9 rounded-xl min-w-9 min-h-9',
   } as Record<string, string>;
 
   const customStyle = `
