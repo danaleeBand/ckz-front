@@ -1,24 +1,25 @@
-import { useEffect, useState } from 'react';
-import axios, { AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
+import { useCallback, useState } from 'react';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useAuthStore } from '@/stores';
 
-export const useAxios = (axiosParams: AxiosRequestConfig) => {
+export type RequestStatus = 'idle' | 'loading' | 'success' | 'error';
+
+export const useAxios = (baseConfig: AxiosRequestConfig) => {
+  const [status, setStatus] = useState<RequestStatus>('idle');
   const [response, setResponse] = useState<AxiosResponse>();
   const [error, setError] = useState<AxiosError>();
-  const [loading, setLoading] = useState<boolean>(true);
 
   const { accessToken } = useAuthStore();
 
   const instance = axios.create({
-    baseURL: import.meta.env.BASE_URL,
-    timeout: 1000,
+    baseURL: import.meta.env.VITE_SERVER_BASE_URL,
+    timeout: 4000,
   });
 
   instance.interceptors.request.use(
     config => {
       config.headers['Content-Type'] = 'application/json';
-      config.headers['access-token'] = accessToken;
-
+      config.headers.Authorization = `Bearer ${accessToken}`;
       return config;
     },
     error => {
@@ -26,46 +27,41 @@ export const useAxios = (axiosParams: AxiosRequestConfig) => {
       return Promise.reject(error);
     },
   );
-
   instance.interceptors.response.use(
     response => {
       // TODO: 오류 페이지 interceptor 추가
+      console.log('interceptor response', response);
       return response;
     },
     async error => {
-      if (error.response?.status === 401) {
-        // TODO: 토큰 말료시 refreshToken으로 accessToken 갱신
-        console.log('interceptor 401 error', error);
-        return instance.request(error.config);
-      }
+      console.log('error', error);
       return Promise.reject(error);
     },
   );
 
-  const fetchData = async (params: AxiosRequestConfig) => {
-    await instance
-      .request(params)
-      .then(res => {
-        setResponse(res);
-      })
-      .catch(err => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const sendRequest = useCallback(
+    async (config?: AxiosRequestConfig) => {
+      console.log('fetchData', baseConfig);
+      setStatus('loading');
+      const finalConfig = {
+        ...baseConfig,
+        ...config,
+      };
+      await instance
+        .request(finalConfig)
+        .then(res => {
+          console.log('res', res.data);
+          setResponse(res);
+          setStatus('success');
+          return res;
+        })
+        .catch(err => {
+          setError(err);
+          setStatus('error');
+        });
+    },
+    [baseConfig, instance],
+  );
 
-  useEffect(() => {
-    if (axiosParams.method === 'GET' || axiosParams.method === 'get') {
-      fetchData(axiosParams);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const sendData = () => {
-    fetchData(axiosParams);
-  };
-
-  return { response, error, loading, sendData };
+  return { status, response, error, sendRequest };
 };
