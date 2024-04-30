@@ -16,6 +16,13 @@ export const Auth = () => {
   const [queryParams] = useSearchParams();
   const code = queryParams.get('code');
 
+  useEffect(() => {
+    if (provider !== 'kakao' && provider !== 'google') {
+      alert('잘못된 접근입니다.');
+      navigate('/');
+    }
+  }, [navigate, provider]);
+
   // 1. 소셜 인증 code로 jwt 토큰 가져오기
   const {
     status: tokenRequestStatus,
