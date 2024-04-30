@@ -1,1 +1,1 @@
-export * from './documents';
+export * from './checklist-document';
