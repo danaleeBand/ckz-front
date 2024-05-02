@@ -1,19 +1,27 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, TextField, TextFieldStatus } from '@/components/ui';
 import { ProfileImageInput } from './profile-image-input';
+import { useUserStore } from '@/stores';
+import { useAxios } from '@/hooks';
 
 export const SignInForm = memo(() => {
+  const { name: userName } = useUserStore();
   const [imageUrl, setImageUrl] = useState<string>();
 
   const textInputRef = useRef<HTMLInputElement>(null);
-  const [nickname, setNickname] = useState<string>();
+  const [nickname, setNickname] = useState<string>(userName ?? '');
   const [validationResult, setValidationResult] =
     useState<TextFieldStatus>('error');
 
+  const navigate = useNavigate();
+  const { status, sendRequest } = useAxios({
+    url: '/user',
+    method: 'PATCH',
+  });
+
   useEffect(() => {
     textInputRef.current?.focus();
-
-    // TODO: 초기에 받은 데이터 세팅
   }, [textInputRef]);
 
   useEffect(() => {
@@ -25,19 +33,30 @@ export const SignInForm = memo(() => {
   }, [nickname]);
 
   const handleSubmitButtonOnClick = async () => {
-    // TODO: validation, api 연결
     if (validationResult === 'error') {
       textInputRef.current?.focus();
       return;
     }
-    const postData = {
-      nickname,
-      imageUrl,
-    };
 
-    // TODO: 다른 화면에서 처리할 듯, alert 말고 모달
-    alert('yes!');
+    if (status === 'idle') {
+      sendRequest({
+        data: {
+          name: nickname,
+          profile_image_url: imageUrl,
+        },
+      });
+    }
   };
+
+  useEffect(() => {
+    if (status === 'success') {
+      // TODO: 다른 화면에서 처리할 듯, alert 말고 모달
+      alert('yes!');
+      navigate('/');
+    } else if (status === 'error') {
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }, [navigate, status]);
 
   const labelStyle = `
     font-bold text-sm pr-5

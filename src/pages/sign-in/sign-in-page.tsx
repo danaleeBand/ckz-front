@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { SignInHeader } from './sign-in-header';
 import { SignInForm } from './form';
 
-export const SignInPage = () => {
+export const SignInPage = memo(() => {
   return (
     <div className='w-screen h-screen'>
       <SignInHeader />
@@ -10,4 +11,4 @@ export const SignInPage = () => {
       </div>
     </div>
   );
-};
+});
