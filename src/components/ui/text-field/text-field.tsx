@@ -1,4 +1,4 @@
-import { useMemo, useState, Ref, forwardRef } from 'react';
+import { useMemo, useState, forwardRef } from 'react';
 import {
   faCheckCircle,
   faExclamationCircle,
