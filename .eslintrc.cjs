@@ -79,6 +79,7 @@ module.exports = {
     'react/require-default-props': 0, // defaultProps 사용
     'react/jsx-no-useless-fragment': 0, // 불필요한 Fragment 사용
     'no-param-reassign': 0, // 파라미터 재할당 허용
+    'jsx-a11y/no-static-element-interactions': 0, // static element에 이벤트 추가
   },
   settings: {
     'import/resolver': {
