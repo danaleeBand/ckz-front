@@ -1,3 +1,9 @@
+import { TreeMenu } from './tree';
+
 export const LeftMenu = () => {
-  return <></>;
+  return (
+    <div>
+      <TreeMenu />
+    </div>
+  );
 };
