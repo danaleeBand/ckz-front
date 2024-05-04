@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NodeModel, useDragOver } from '@minoru/react-dnd-treeview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,17 +29,21 @@ export const TreeItem = memo(
     };
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
 
-    const customStyle = `ml-${depth * 4} ${getTreeItemType(node.id as string) === 2 && 'px-7'}`;
-    const selectedStyle = isSelected
-      ? 'bg-bg-darker dark:bg-dark-bg-lighter font-bold'
-      : 'bg-bg-dark dark:bg-dark-bg-light hover:bg-grey-150 dark:hover:bg-grey-850';
+    const customStyle = useMemo(() => {
+      return `${getTreeItemType(node.id as string) === 2 ? 'px-7' : ''} ${
+        isSelected
+          ? 'bg-bg-darker dark:bg-dark-bg-lighter font-bold'
+          : 'bg-bg-dark dark:bg-dark-bg-light hover:bg-grey-150 dark:hover:bg-grey-850'
+      } ${depth === 0 ? 'ml-1' : depth === 1 ? 'ml-4' : depth === 2 ? 'ml-8' : ''}`;
+    }, [depth, node.id, isSelected]);
 
+    console.log(customStyle);
     return (
       <div
         className={`tree-node flex flex-row gap-1.5 items-center
-      cursor-pointer py-1 px-2 mx-1
+      cursor-pointer py-1 px-2
       rounded-md
-      ${customStyle} ${selectedStyle}`}
+      ${customStyle}`}
         onClick={handleOnClick}
         {...dragOverProps}
       >
