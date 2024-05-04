@@ -1,27 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuthStore, useUserStore } from '@/stores';
 import { useAxios } from '@/hooks';
 
 export const Auth = () => {
   const { provider } = useParams();
-
-  const [jwtAccessToken, setJwtAccessToken] = useState('');
-  const mounted = useRef(false);
-
-  const navigate = useNavigate();
-  const { setAccessToken } = useAuthStore();
-  const { setUserName } = useUserStore();
-
   const [queryParams] = useSearchParams();
   const code = queryParams.get('code');
+  const navigate = useNavigate();
+
+  const { setAccessToken } = useAuthStore();
+  const { setUserName } = useUserStore();
+  const [jwtAccessToken, setJwtAccessToken] = useState('');
 
   useEffect(() => {
     if (provider !== 'kakao' && provider !== 'google') {
       alert('잘못된 접근입니다.');
       navigate('/');
     }
-  }, [navigate, provider]);
+  }, [provider]);
 
   useEffect(() => {
     localStorage.removeItem('auth-storage');
@@ -32,21 +29,14 @@ export const Auth = () => {
     status: tokenRequestStatus,
     response: tokenResponse,
     error: tokenError,
-    sendRequest: sendTokenRequest,
-  } = useAxios({
-    url: `/auth/${provider}/token`,
-    method: 'GET',
-    params: { code },
-  });
-
-  // 컴포넌트 최초 mount 시 jwt 토큰 요청
-  useEffect(() => {
-    if (!mounted.current) {
-      sendTokenRequest();
-      mounted.current = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  } = useAxios(
+    {
+      url: `/auth/${provider}/token`,
+      method: 'GET',
+      params: { code },
+    },
+    true,
+  );
 
   // jwt 토큰 저장
   useEffect(() => {
@@ -59,7 +49,7 @@ export const Auth = () => {
       setAccessToken(null);
       navigate('/');
     }
-  }, [navigate, setAccessToken, tokenError, tokenRequestStatus, tokenResponse]);
+  }, [tokenError, tokenRequestStatus, tokenResponse]);
 
   // 2. 사용자 정보 가져오기
   const {
@@ -80,7 +70,7 @@ export const Auth = () => {
     if (jwtAccessToken && userApiRequestStatus === 'idle') {
       sendUserRequest();
     }
-  }, [jwtAccessToken, sendUserRequest, userApiRequestStatus]);
+  }, [jwtAccessToken, userApiRequestStatus]);
 
   // 사용자 정보 저장
   useEffect(() => {
@@ -94,14 +84,7 @@ export const Auth = () => {
       setUserName(null);
       navigate('/');
     }
-  }, [
-    navigate,
-    setAccessToken,
-    setUserName,
-    userApiRequestStatus,
-    userApiError,
-    userApiResponse,
-  ]);
+  }, [userApiRequestStatus, userApiError, userApiResponse]);
 
   return null;
 };
