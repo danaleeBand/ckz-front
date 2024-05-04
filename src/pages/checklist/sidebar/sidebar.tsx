@@ -1,6 +1,6 @@
 import { TreeMenu } from './tree';
 
-export const LeftMenu = () => {
+export const Sidebar = () => {
   return (
     <div className='box-shadow-right'>
       <TreeMenu />

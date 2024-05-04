@@ -1,10 +1,10 @@
 import { ChecklistDocument } from './checklist-document';
-import { LeftMenu } from './left-menu';
+import { Sidebar } from './sidebar';
 
 export const Checklist = () => {
   return (
     <>
-      <LeftMenu />
+      <Sidebar />
       <ChecklistDocument />
     </>
   );
