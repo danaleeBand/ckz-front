@@ -37,7 +37,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 1,
     'no-console': 0, // 콘솔 사용 시 발생하는 경고 비활성화
     'import/prefer-default-export': 0, // export문이 하나일 때 default export 사용 권장 경고 비활성화
-    'react-hooks/exhaustive-deps': 1, // react hooks의 의존성배열이 충분하지 않을 때 경고 표시
+    'react-hooks/exhaustive-deps': 0, // react hooks의 의존성배열이 충분하지 않을 때 경고 표시
     'react/jsx-pascal-case': 1, // 컴포넌트 이름은 PascalCase로
     'react/jsx-key': 1, // 반복문으로 생성하는 요소에 key 강제
     'no-debugger': 0, // 디버그 허용
@@ -80,6 +80,7 @@ module.exports = {
     'react/jsx-no-useless-fragment': 0, // 불필요한 Fragment 사용
     'no-param-reassign': 0, // 파라미터 재할당 허용
     'jsx-a11y/no-static-element-interactions': 0, // static element에 이벤트 추가
+    'react/no-unstable-nested-components': 0, // 중첩 컴포넌트 사용
   },
   settings: {
     'import/resolver': {
