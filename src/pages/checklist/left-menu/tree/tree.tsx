@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import {
   Tree,
@@ -7,16 +7,37 @@ import {
   getBackendOptions,
   DragLayerMonitorProps,
 } from '@minoru/react-dnd-treeview';
-import { TreeDataProps, getTreeItemType } from './util';
+import { TreeDataProps } from '@/types';
+import { useAxios } from '@/hooks';
+import { formatTreeData, getTreeItemType } from '@/utils';
 import { TreeItem } from './tree-item';
 import { TreeItemDragPreview } from './tree-item-dragging';
 import { TreePlaceholder } from './tree-item-placeholder';
-import { mockData } from './data';
 
-export const TreeMenu = () => {
-  const [treeData, setTreeData] =
-    useState<Array<NodeModel<TreeDataProps>>>(mockData);
+export const TreeMenu = memo(() => {
+  const [treeData, setTreeData] = useState<Array<NodeModel<TreeDataProps>>>([]);
   const [selectedNodeId, setSelectedNodeId] = useState<string>();
+
+  const {
+    response: initDataResponse,
+    error: initDataError,
+    status: initDataRequestStatus,
+  } = useAxios(
+    {
+      url: '/sidebar/tree',
+      method: 'GET',
+    },
+    true,
+  );
+  useEffect(() => {
+    if (initDataRequestStatus === 'success' && initDataResponse) {
+      const initTreeData = formatTreeData(initDataResponse);
+      setTreeData(initTreeData);
+    }
+    if (initDataRequestStatus === 'error' && initDataError) {
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }, [initDataError, initDataResponse, initDataRequestStatus]);
 
   const handleDrop = (newTreeData: Array<NodeModel<TreeDataProps>>) => {
     setTreeData(newTreeData);
@@ -38,7 +59,6 @@ export const TreeMenu = () => {
               onSelect={newNode => setSelectedNodeId(newNode)}
             />
           )}
-          // eslint-disable-next-line react/no-unstable-nested-components
           dragPreviewRender={monitorProps => (
             <TreeItemDragPreview
               monitorProps={
@@ -64,7 +84,6 @@ export const TreeMenu = () => {
           rootProps={{
             className: 'bg-bg-dark dark:bg-bg-light h-screen max-w-sm pt-2',
           }}
-          // eslint-disable-next-line react/no-unstable-nested-components
           placeholderRender={(_, { depth }) => (
             <TreePlaceholder depth={depth} />
           )}
@@ -73,4 +92,4 @@ export const TreeMenu = () => {
       </div>
     </DndProvider>
   );
-};
+});
