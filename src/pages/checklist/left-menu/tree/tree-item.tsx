@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { NodeModel, useDragOver } from '@minoru/react-dnd-treeview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import { TreeDataProps, getTreeItemId, getTreeItemType } from './util';
+import { TreeDataProps } from '@/types';
+import { getTreeItemId, getTreeItemType } from '@/utils';
 
 export type TreeItemProps = {
   node: NodeModel<TreeDataProps>;

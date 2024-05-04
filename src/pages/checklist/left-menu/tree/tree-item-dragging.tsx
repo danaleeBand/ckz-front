@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { DragLayerMonitorProps } from '@minoru/react-dnd-treeview';
-import { TreeDataProps } from './util';
+import { TreeDataProps } from '@/types';
 
 export type DragItemProps = {
   monitorProps: DragLayerMonitorProps<TreeDataProps>;
