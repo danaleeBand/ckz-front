@@ -141,6 +141,7 @@ export default {
             dark: PRIMARY_COLOR[700],
             light: PRIMARY_COLOR[300],
             lighter: PRIMARY_COLOR[200],
+            lightest: PRIMARY_COLOR[100],
           },
           secondary: {
             DEFAULT: SECONDARY_COLOR[400],
@@ -160,6 +161,8 @@ export default {
               DEFAULT: PRIMARY_COLOR[300],
               light: PRIMARY_COLOR[200],
               dark: PRIMARY_COLOR[400],
+              darker: PRIMARY_COLOR[600],
+              darkest: PRIMARY_COLOR[800],
             },
             secondary: {
               DEFAULT: SECONDARY_COLOR[200],
