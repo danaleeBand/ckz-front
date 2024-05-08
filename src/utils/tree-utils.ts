@@ -15,11 +15,11 @@ export const getTreeItemId = (id: string) => {
 };
 
 export const getTreeItemType = (id: string) => {
+  if (!id || !id.includes('-')) {
+    return -999;
+  }
   if (id === 'root') {
     return -1;
-  }
-  if (!id.includes('-')) {
-    return -999;
   }
   return parseInt(id.split('-')[0], 10);
 };
