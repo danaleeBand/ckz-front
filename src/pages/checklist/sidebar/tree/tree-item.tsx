@@ -36,8 +36,10 @@ export const TreeItem = memo(
     const customStyle = useMemo(() => {
       return `${getTreeItemType(node.id as string) === 2 ? 'px-7' : ''} ${
         isSelected
-          ? 'bg-bg-darker dark:bg-dark-bg-lighter font-bold'
-          : 'bg-bg-dark dark:bg-dark-bg-light hover:bg-grey-150 dark:hover:bg-grey-850'
+          ? `bg-bg-darker dark:bg-dark-bg-lighter font-bold 
+              text-text-primary dark:text-dark-text-primary`
+          : `bg-bg-dark dark:bg-dark-bg-light hover:bg-grey-150 dark:hover:bg-grey-850 
+              text-text-light dark:text-dark-text-dark`
       } ${depth === 0 ? 'ml-1' : depth === 1 ? 'ml-4' : depth === 2 ? 'ml-8' : ''}`;
     }, [depth, node.id, isSelected]);
 
@@ -59,12 +61,7 @@ export const TreeItem = memo(
             {!isOpen && <FontAwesomeIcon icon={faCaretRight} />}
           </div>
         )}
-        <div
-          className={`text-basic text-text-light dark:text-dark-text-dark
-          truncate w-full`}
-        >
-          {node.text}
-        </div>
+        <div className='text-basic truncate w-full'>{node.text}</div>
       </div>
     );
   },

@@ -12,10 +12,11 @@ export const TreeItemDragPreview = memo(({ monitorProps }: DragItemProps) => {
   const customStyle = `
     w-40 py-1 px-2
     rounded-md
-    text-basic text-text-light dark:text-dark-text-dark
-    truncate 
-    bg-bg-darker dark:bg-dark-bg-lighter
-    opacity-50
+    text-basic truncate font-bold
+    text-text-primary dark:text-dark-text-primary 
+    bg-bg-dark dark:bg-dark-bg-light
+    border-2 border-border-primary dark:border-dark-border-primary
+    shadow-lg
   `;
 
   return <div className={customStyle}>{item.text}</div>;
