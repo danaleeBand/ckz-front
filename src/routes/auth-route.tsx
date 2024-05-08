@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuthStore, useUserStore } from '@/stores';
 import { useAxios } from '@/hooks';
 
-export const Auth = () => {
+export const AuthRoute = () => {
   const { provider } = useParams();
   const [queryParams] = useSearchParams();
   const code = queryParams.get('code');
