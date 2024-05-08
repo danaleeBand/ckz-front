@@ -9,7 +9,7 @@ import {
 } from '@minoru/react-dnd-treeview';
 import { TreeDataProps } from '@/types';
 import { useAxios } from '@/hooks';
-import { formatTreeData, getTreeItemType } from '@/utils';
+import { formatTreeData, isDroppableTreeItem } from '@/utils';
 import { TreeItem } from './tree-item';
 import { TreeItemDragPreview } from './tree-item-dragging';
 import { TreePlaceholder } from './tree-item-placeholder';
@@ -48,51 +48,40 @@ export const TreeMenu = memo(() => {
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-      <div>
-        <Tree
-          tree={treeData}
-          rootId={'root'}
-          render={(node, { depth, isOpen, onToggle }) => (
-            <TreeItem
-              node={node as NodeModel<TreeDataProps>}
-              depth={depth}
-              isOpen={isOpen}
-              isSelected={node.id === selectedNodeId}
-              onToggle={onToggle}
-              onSelect={newNode => setSelectedNodeId(newNode)}
-            />
-          )}
-          dragPreviewRender={monitorProps => (
-            <TreeItemDragPreview
-              monitorProps={
-                monitorProps as DragLayerMonitorProps<TreeDataProps>
-              }
-            />
-          )}
-          onDrop={handleDrop}
-          sort={false}
-          insertDroppableFirst
-          canDrop={(_, { dragSource, dropTargetId }) => {
-            if (
-              getTreeItemType(dragSource?.id as string) >
-                getTreeItemType(dropTargetId as string) ||
-              (getTreeItemType(dragSource?.id as string) === 0 &&
-                dropTargetId === 'root')
-            ) {
-              return true;
-            }
-            return false;
-          }}
-          dropTargetOffset={10}
-          rootProps={{
-            className: 'bg-bg-dark dark:bg-bg-light h-screen max-w-sm pt-2',
-          }}
-          placeholderRender={(_, { depth }) => (
-            <TreePlaceholder depth={depth} />
-          )}
-          enableAnimateExpand
-        />
-      </div>
+      <Tree
+        tree={treeData}
+        rootId={'root'}
+        render={(node, { depth, isOpen, onToggle }) => (
+          <TreeItem
+            node={node as NodeModel<TreeDataProps>}
+            depth={depth}
+            isOpen={isOpen}
+            isSelected={node.id === selectedNodeId}
+            onToggle={onToggle}
+            onSelect={newNode => setSelectedNodeId(newNode)}
+          />
+        )}
+        dragPreviewRender={monitorProps => (
+          <TreeItemDragPreview
+            monitorProps={monitorProps as DragLayerMonitorProps<TreeDataProps>}
+          />
+        )}
+        onDrop={handleDrop}
+        sort={false}
+        insertDroppableFirst
+        canDrop={(_, { dragSource, dropTargetId }) => {
+          return isDroppableTreeItem(
+            dropTargetId as string,
+            dragSource?.id as string,
+          );
+        }}
+        dropTargetOffset={10}
+        rootProps={{
+          className: 'bg-bg-dark dark:bg-bg-light w-full h-screen pt-2 pr-2',
+        }}
+        placeholderRender={(_, { depth }) => <TreePlaceholder depth={depth} />}
+        enableAnimateExpand
+      />
     </DndProvider>
   );
 });

@@ -6,7 +6,8 @@ import {
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
+  content: ['./src/**/*.{html,js,jsx,ts,tsx}', './public/index.html'],
+  mode: 'jit',
   darkMode: 'selector',
   theme: {
     fontFamily: {
@@ -217,6 +218,7 @@ export default {
   plugins: [],
   corePlugins: {
     preflight: true,
+    arbitraryValue: true,
   },
   variants: {},
 };
