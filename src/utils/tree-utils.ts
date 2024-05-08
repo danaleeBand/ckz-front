@@ -15,6 +15,12 @@ export const getTreeItemId = (id: string) => {
 };
 
 export const getTreeItemType = (id: string) => {
+  if (id === 'root') {
+    return -1;
+  }
+  if (!id.includes('-')) {
+    return -999;
+  }
   return parseInt(id.split('-')[0], 10);
 };
 
@@ -67,4 +73,20 @@ export const formatTreeData = (apiResponse: TreeApiResponseType) => {
     );
   });
   return treeData;
+};
+
+export const isDroppableTreeItem = (
+  dropTargetId: string,
+  dragSourceId: string,
+) => {
+  const dropTargetType = getTreeItemType(dropTargetId);
+  const dragSourceType = getTreeItemType(dragSourceId);
+
+  if (dropTargetType === -1 && dragSourceType === 0) {
+    return true;
+  }
+  if (dropTargetType >= 0 && dragSourceType > dropTargetType) {
+    return true;
+  }
+  return false;
 };
