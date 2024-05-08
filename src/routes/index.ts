@@ -1,3 +1,3 @@
-export * from './auth';
+export * from './auth-route';
 export * from './protected-route';
-export * from './index-routing';
+export * from './index-route';
