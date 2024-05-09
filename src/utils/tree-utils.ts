@@ -82,10 +82,10 @@ export const isDroppableTreeItem = (
   const dropTargetType = getTreeItemType(dropTargetId);
   const dragSourceType = getTreeItemType(dragSourceId);
 
-  if (dropTargetType === -1 && dragSourceType === 0) {
+  if (dropTargetType < 0 && dragSourceType === 0) {
     return true;
   }
-  if (dragSourceType > dropTargetType) {
+  if (dropTargetType >= 0 && dragSourceType > dropTargetType) {
     return true;
   }
   return false;
