@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
+import { useChecklistStore } from '@/stores';
 
 export type TreeItemProps = {
   node: NodeModel<TreeDataProps>;
@@ -12,11 +13,11 @@ export type TreeItemProps = {
   isOpen: boolean;
   isSelected: boolean;
   onToggle: (id: NodeModel['id']) => void;
-  onSelect: (id: string) => void;
 };
 
 export const TreeItem = memo(
-  ({ node, depth, isOpen, isSelected, onToggle, onSelect }: TreeItemProps) => {
+  ({ node, depth, isOpen, isSelected, onToggle }: TreeItemProps) => {
+    const { setLastViewedChecklistId } = useChecklistStore();
     const navigate = useNavigate();
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
 
@@ -24,13 +25,13 @@ export const TreeItem = memo(
       (e: React.MouseEvent) => {
         e.stopPropagation();
         if (getTreeItemType(node.id as string) === 2) {
-          onSelect(node.id as string);
+          setLastViewedChecklistId(getTreeItemId(node.id as string));
           navigate(`/${getTreeItemId(node.id as string)}`);
         } else {
           onToggle(node.id as string);
         }
       },
-      [node.id, onToggle, onSelect],
+      [node.id, onToggle],
     );
 
     const customStyle = useMemo(() => {

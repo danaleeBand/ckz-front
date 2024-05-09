@@ -20,10 +20,6 @@ export const AuthRoute = () => {
     }
   }, [provider]);
 
-  useEffect(() => {
-    localStorage.removeItem('auth-storage');
-  }, []);
-
   // 1. 소셜 인증 code로 jwt 토큰 가져오기
   const {
     status: tokenRequestStatus,

@@ -1,4 +1,5 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import {
   Tree,
@@ -17,7 +18,15 @@ import { apiDataExample } from './data';
 
 export const TreeMenu = memo(() => {
   const [treeData, setTreeData] = useState<Array<NodeModel<TreeDataProps>>>([]);
+  const [defaultOpened, setDefaultOpened] = useState<Array<string>>([]);
   const [selectedNodeId, setSelectedNodeId] = useState<string>();
+
+  const params = useParams();
+  const { checklistId } = params;
+
+  useEffect(() => {
+    setSelectedNodeId(`2-${checklistId}`);
+  }, [checklistId]);
 
   const {
     response: initDataResponse,
@@ -36,9 +45,17 @@ export const TreeMenu = memo(() => {
       setTreeData(initTreeData);
     }
     if (initDataRequestStatus === 'error' && initDataError) {
-      console.log('오류가 발생했습니다. mockData 보여줌.'); // TODO: 이후 삭제, 오류처리 연결
+      console.log('오류가 발생했습니다. mockData 보여줌.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
       const initTreeData = formatTreeData(apiDataExample);
       setTreeData(initTreeData);
+
+      const openedFolder = initTreeData.filter(
+        data => data.id === `2-${checklistId}`,
+      )[0].parent as string;
+      const openedWorkspace = initTreeData.filter(
+        data => data.id === openedFolder,
+      )[0].parent as string;
+      setDefaultOpened([openedWorkspace, openedFolder]);
     }
   }, [initDataError, initDataResponse, initDataRequestStatus]);
 
@@ -58,7 +75,6 @@ export const TreeMenu = memo(() => {
             isOpen={isOpen}
             isSelected={node.id === selectedNodeId}
             onToggle={onToggle}
-            onSelect={newNode => setSelectedNodeId(newNode)}
           />
         )}
         dragPreviewRender={monitorProps => (
@@ -81,6 +97,7 @@ export const TreeMenu = memo(() => {
         }}
         placeholderRender={(_, { depth }) => <TreePlaceholder depth={depth} />}
         enableAnimateExpand
+        initialOpen={defaultOpened}
       />
     </DndProvider>
   );
