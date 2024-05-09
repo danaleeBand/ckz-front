@@ -93,7 +93,7 @@ export const TreeMenu = memo(() => {
         }}
         dropTargetOffset={10}
         rootProps={{
-          className: 'bg-bg-dark dark:bg-bg-light w-full h-screen pt-2 pr-2',
+          className: 'bg-bg-dark dark:bg-bg-light w-full h-screen pt-2',
         }}
         placeholderRender={(_, { depth }) => <TreePlaceholder depth={depth} />}
         enableAnimateExpand
