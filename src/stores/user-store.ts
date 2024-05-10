@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type userStore = {
   name: string | null;
@@ -7,10 +8,15 @@ export type userStore = {
   setProfileImageUrl: (profileImageUrl: string | null) => void;
 };
 
-export const useUserStore = create<userStore>(set => ({
-  name: null,
-  profileImageUrl: null,
-  setUserName: (name: string | null) => set({ name }),
-  setProfileImageUrl: (profileImageUrl: string | null) =>
-    set({ profileImageUrl }),
-}));
+export const useUserStore = create(
+  persist<userStore>(
+    set => ({
+      name: null,
+      profileImageUrl: null,
+      setUserName: (name: string | null) => set({ name }),
+      setProfileImageUrl: (profileImageUrl: string | null) =>
+        set({ profileImageUrl }),
+    }),
+    { name: 'user-storage' },
+  ),
+);
