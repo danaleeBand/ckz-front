@@ -6,7 +6,7 @@ import { useUserStore } from '@/stores';
 import { useAxios } from '@/hooks';
 
 export const SignInForm = memo(() => {
-  const { name: userName } = useUserStore();
+  const { name: userName, setUserName, setProfileImageUrl } = useUserStore();
   const [imageUrl, setImageUrl] = useState<string>();
 
   const textInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +50,8 @@ export const SignInForm = memo(() => {
 
   useEffect(() => {
     if (status === 'success') {
+      setUserName(nickname);
+      setProfileImageUrl(imageUrl ?? '');
       // TODO: 다른 화면에서 처리할 듯, alert 말고 모달
       alert('yes!');
       navigate('/');
