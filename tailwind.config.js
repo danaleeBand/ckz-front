@@ -6,7 +6,8 @@ import {
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
+  content: ['./src/**/*.{html,js,jsx,ts,tsx}', './public/index.html'],
+  mode: 'jit',
   darkMode: 'selector',
   theme: {
     fontFamily: {
@@ -141,6 +142,7 @@ export default {
             dark: PRIMARY_COLOR[700],
             light: PRIMARY_COLOR[300],
             lighter: PRIMARY_COLOR[200],
+            lightest: PRIMARY_COLOR[100],
           },
           secondary: {
             DEFAULT: SECONDARY_COLOR[400],
@@ -160,6 +162,8 @@ export default {
               DEFAULT: PRIMARY_COLOR[300],
               light: PRIMARY_COLOR[200],
               dark: PRIMARY_COLOR[400],
+              darker: PRIMARY_COLOR[600],
+              darkest: PRIMARY_COLOR[800],
             },
             secondary: {
               DEFAULT: SECONDARY_COLOR[200],
@@ -207,10 +211,14 @@ export default {
         },
       },
     },
+    boxShadow: {
+      right: '10px 0 10px -10px rgba(0, 0, 0, 0.3)',
+    },
   },
   plugins: [],
   corePlugins: {
     preflight: true,
+    arbitraryValue: true,
   },
   variants: {},
 };
