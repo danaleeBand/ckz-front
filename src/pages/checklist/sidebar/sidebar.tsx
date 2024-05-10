@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { TreeMenu } from './tree';
 import { DragHandle } from './sidebar-drag-handle';
+import { SidebarHeader } from './header';
 
 export const Sidebar = () => {
   const [width, setWidth] = useState(250);
@@ -16,7 +17,10 @@ export const Sidebar = () => {
       className='flex flex-row relative'
       style={{ width: `${width}px` }}
     >
-      <TreeMenu />
+      <div>
+        <SidebarHeader />
+        <TreeMenu />
+      </div>
       <DragHandle onDrag={handleDrag} />
     </div>
   );
