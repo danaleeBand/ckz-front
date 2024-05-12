@@ -1,9 +1,14 @@
+import { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Avatar, Tooltip } from '@/components/ui';
 import { useUserStore } from '@/stores';
 
-export const SidebarHeader = () => {
+export type SidebarHeaderProps = {
+  width: number;
+};
+
+export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
   const { name, profileImageUrl } = useUserStore();
 
   const actionIconStyle =
@@ -16,7 +21,7 @@ export const SidebarHeader = () => {
     >
       <Avatar imageUrl={profileImageUrl ?? ''} className='w-6 h-6' />
       <p className='font-bold text-sm text-text-light dark:text-dark-text-dark'>
-        {name}의 체크리스트
+        {width >= 250 && `${name}의 `}체크리스트
       </p>
       <div className='flex flex-row gap-1 items-center ml-auto mr-2 text-text-lighter dark:text-dark-text-darker text-sm'>
         <FontAwesomeIcon
