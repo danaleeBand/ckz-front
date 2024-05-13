@@ -47,7 +47,7 @@ export const TreeItem = memo(
     return (
       <div
         className={`tree-node flex flex-row gap-1.5 items-center
-          cursor-pointer py-1 px-2 mr-1 my-1
+          cursor-pointer py-1 px-2 mr-1 my-0.5
           rounded-md
           ${customStyle}`}
         onClick={handleOnClick}
