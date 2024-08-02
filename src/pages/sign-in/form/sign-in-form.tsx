@@ -86,7 +86,7 @@ export const SignInForm = memo(() => {
                 value={nickname}
                 onChange={value => setNickname(value as string)}
                 validationResult={validationResult}
-                textLimit={8}
+                textLimit={15}
                 helperText={
                   validationResult === 'error'
                     ? '닉네임을 두 글자 이상 입력해주세요.'
