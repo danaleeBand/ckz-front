@@ -62,6 +62,7 @@ export const SignInForm = memo(() => {
 
   const labelStyle = `
     font-bold text-sm pr-5
+    dark:text-dark-text-primary-light
   `;
 
   return (
