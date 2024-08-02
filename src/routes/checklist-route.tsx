@@ -48,5 +48,5 @@ export const ChecklistRoute = () => {
     }
   }, [error, response, status]);
 
-  return <></>;
+  return null;
 };

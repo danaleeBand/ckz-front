@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuthStore, useUserStore } from '@/stores';
 import { useAxios } from '@/hooks';
+import { logout } from '@/utils';
 
 export const AuthRoute = () => {
   const { provider } = useParams();
@@ -10,7 +11,7 @@ export const AuthRoute = () => {
   const navigate = useNavigate();
 
   const { setAccessToken } = useAuthStore();
-  const { setUserName } = useUserStore();
+  const { setUserName, setProfileImageUrl } = useUserStore();
   const [jwtAccessToken, setJwtAccessToken] = useState('');
 
   useEffect(() => {
@@ -40,9 +41,10 @@ export const AuthRoute = () => {
       const { accessToken } = tokenResponse.data;
       setAccessToken(accessToken);
       setJwtAccessToken(accessToken);
+      // TODO: refresh token 처리
     } else if (tokenRequestStatus === 'error' && tokenError) {
       alert('로그인에 실패했습니다.');
-      setAccessToken(null);
+      logout();
       navigate('/');
     }
   }, [tokenError, tokenRequestStatus, tokenResponse]);
@@ -71,13 +73,17 @@ export const AuthRoute = () => {
   // 사용자 정보 저장
   useEffect(() => {
     if (userApiRequestStatus === 'success' && userApiResponse) {
-      const { name, is_checky: isChecky } = userApiResponse.data;
+      const {
+        name,
+        profile_image_url: imageUrl,
+        is_checky: isChecky,
+      } = userApiResponse.data;
       setUserName(name);
+      setProfileImageUrl(imageUrl);
       navigate(isChecky ? '/' : '/join');
     } else if (userApiRequestStatus === 'error' && userApiError) {
       alert('사용자 정보를 가져오는 데 실패했습니다.');
-      setAccessToken(null);
-      setUserName(null);
+      logout();
       navigate('/');
     }
   }, [userApiRequestStatus, userApiError, userApiResponse]);
