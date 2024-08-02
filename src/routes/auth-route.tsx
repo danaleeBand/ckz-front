@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuthStore, useUserStore } from '@/stores';
 import { useAxios } from '@/hooks';
+import { logout } from '@/utils';
 
 export const AuthRoute = () => {
   const { provider } = useParams();
@@ -10,7 +11,7 @@ export const AuthRoute = () => {
   const navigate = useNavigate();
 
   const { setAccessToken } = useAuthStore();
-  const { setUserName, setProfileImageUrl, logout } = useUserStore();
+  const { setUserName, setProfileImageUrl } = useUserStore();
   const [jwtAccessToken, setJwtAccessToken] = useState('');
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const AuthRoute = () => {
       // TODO: refresh token 처리
     } else if (tokenRequestStatus === 'error' && tokenError) {
       alert('로그인에 실패했습니다.');
-      setAccessToken(null);
+      logout();
       navigate('/');
     }
   }, [tokenError, tokenRequestStatus, tokenResponse]);
@@ -82,7 +83,6 @@ export const AuthRoute = () => {
       navigate(isChecky ? '/' : '/join');
     } else if (userApiRequestStatus === 'error' && userApiError) {
       alert('사용자 정보를 가져오는 데 실패했습니다.');
-      setAccessToken(null);
       logout();
       navigate('/');
     }

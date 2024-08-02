@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type ChecklistStore = {
   lastViewedChecklistId: number | null;
@@ -15,6 +15,7 @@ export const useChecklistStore = create(
     }),
     {
       name: 'checklist-storage',
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

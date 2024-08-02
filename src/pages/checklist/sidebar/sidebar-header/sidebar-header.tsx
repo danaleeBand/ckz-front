@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Avatar, Dropdown, DropdownItemProps, Tooltip } from '@/components/ui';
-import { useAuthStore, useUserStore } from '@/stores';
+import { useUserStore } from '@/stores';
+import { logout } from '@/utils';
 
 export type SidebarHeaderProps = {
   width: number;
@@ -13,8 +14,7 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { name, profileImageUrl, logout } = useUserStore();
-  const { setAccessToken } = useAuthStore();
+  const { name, profileImageUrl } = useUserStore();
 
   const dropdownItems: Array<DropdownItemProps> = useMemo(() => {
     return [
@@ -29,7 +29,6 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
         name: '로그아웃',
         id: 2,
         onClick: () => {
-          setAccessToken(null);
           logout();
           navigate('/login');
         },
