@@ -40,6 +40,7 @@ export const AuthRoute = () => {
       const { accessToken } = tokenResponse.data;
       setAccessToken(accessToken);
       setJwtAccessToken(accessToken);
+      // TODO: refresh token 처리
     } else if (tokenRequestStatus === 'error' && tokenError) {
       alert('로그인에 실패했습니다.');
       setAccessToken(null);
