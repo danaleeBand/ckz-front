@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type AuthStore = {
   accessToken: string | null;
@@ -14,6 +14,7 @@ export const useAuthStore = create(
     }),
     {
       name: 'auth-storage',
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type userStore = {
   name: string | null;
@@ -17,6 +17,9 @@ export const useUserStore = create(
       setProfileImageUrl: (profileImageUrl: string | null) =>
         set({ profileImageUrl }),
     }),
-    { name: 'user-storage' },
+    {
+      name: 'user-storage',
+      storage: createJSONStorage(() => sessionStorage),
+    },
   ),
 );
