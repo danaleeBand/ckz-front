@@ -6,16 +6,25 @@ export type userStore = {
   profileImageUrl: string | null;
   setUserName: (name: string | null) => void;
   setProfileImageUrl: (profileImageUrl: string | null) => void;
+  logout: () => void;
+};
+
+const initialState: Omit<
+  userStore,
+  'setUserName' | 'setProfileImageUrl' | 'logout'
+> = {
+  name: null,
+  profileImageUrl: null,
 };
 
 export const useUserStore = create(
   persist<userStore>(
     set => ({
-      name: null,
-      profileImageUrl: null,
+      ...initialState,
       setUserName: (name: string | null) => set({ name }),
       setProfileImageUrl: (profileImageUrl: string | null) =>
         set({ profileImageUrl }),
+      logout: () => set(initialState),
     }),
     {
       name: 'user-storage',

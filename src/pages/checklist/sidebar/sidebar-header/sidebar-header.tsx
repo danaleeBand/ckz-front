@@ -13,7 +13,7 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { name, profileImageUrl } = useUserStore();
+  const { name, profileImageUrl, logout } = useUserStore();
   const { setAccessToken } = useAuthStore();
 
   const dropdownItems: Array<DropdownItemProps> = useMemo(() => {
@@ -30,6 +30,7 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
         id: 2,
         onClick: () => {
           setAccessToken(null);
+          logout();
           navigate('/login');
         },
       },
