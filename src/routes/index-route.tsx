@@ -13,5 +13,5 @@ export const IndexRoute = () => {
     }
   }, []);
 
-  return <></>;
+  return null;
 };
