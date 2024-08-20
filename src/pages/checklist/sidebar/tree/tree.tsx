@@ -14,7 +14,6 @@ import { formatTreeData, isDroppableTreeItem } from '@/utils';
 import { TreeItem } from './tree-item';
 import { TreeItemDragPreview } from './tree-item-dragging';
 import { TreePlaceholder } from './tree-item-placeholder';
-import { apiDataExample } from './data';
 
 export const TreeMenu = memo(() => {
   const [treeData, setTreeData] = useState<Array<NodeModel<TreeDataProps>>>([]);
@@ -39,16 +38,13 @@ export const TreeMenu = memo(() => {
     },
     true,
   );
+
   useEffect(() => {
     if (initDataRequestStatus === 'success' && initDataResponse) {
+      console.log('initDataResponse', initDataResponse);
       const initTreeData = formatTreeData(initDataResponse);
+      console.log('initTreeData', initTreeData);
       setTreeData(initTreeData);
-    }
-    if (initDataRequestStatus === 'error' && initDataError) {
-      console.log('오류가 발생했습니다. mockData 보여줌.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
-      const initTreeData = formatTreeData(apiDataExample);
-      setTreeData(initTreeData);
-
       const openedFolder = initTreeData.filter(
         data => data.id === `2-${checklistId}`,
       )[0].parent as string;
@@ -56,6 +52,9 @@ export const TreeMenu = memo(() => {
         data => data.id === openedFolder,
       )[0].parent as string;
       setDefaultOpened([openedWorkspace, openedFolder]);
+    }
+    if (initDataRequestStatus === 'error' && initDataError) {
+      alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
     }
   }, [initDataError, initDataResponse, initDataRequestStatus]);
 
