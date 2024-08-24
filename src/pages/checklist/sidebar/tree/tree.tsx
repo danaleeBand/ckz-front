@@ -9,11 +9,11 @@ import {
   DragLayerMonitorProps,
 } from '@minoru/react-dnd-treeview';
 import { TreeDataProps } from '@/types';
-import { useAxios } from '@/hooks';
 import { formatTreeData, isDroppableTreeItem } from '@/utils';
 import { TreeItem } from './tree-item';
 import { TreeItemDragPreview } from './tree-item-dragging';
 import { TreePlaceholder } from './tree-item-placeholder';
+import { getSidebarTree, TreeApiResponseType } from '@/api';
 
 export const TreeMenu = memo(() => {
   const [treeData, setTreeData] = useState<Array<NodeModel<TreeDataProps>>>([]);
@@ -27,23 +27,10 @@ export const TreeMenu = memo(() => {
     setSelectedNodeId(`2-${checklistId}`);
   }, [checklistId]);
 
-  const {
-    response: initDataResponse,
-    error: initDataError,
-    status: initDataRequestStatus,
-  } = useAxios(
-    {
-      url: '/sidebar/tree',
-      method: 'GET',
-    },
-    true,
-  );
-
-  useEffect(() => {
-    if (initDataRequestStatus === 'success' && initDataResponse) {
-      console.log('initDataResponse', initDataResponse);
-      const initTreeData = formatTreeData(initDataResponse);
-      console.log('initTreeData', initTreeData);
+  const handleTreeData = async () => {
+    const response = await getSidebarTree();
+    if (response.success) {
+      const initTreeData = formatTreeData(response as TreeApiResponseType);
       setTreeData(initTreeData);
       const openedFolder = initTreeData.filter(
         data => data.id === `2-${checklistId}`,
@@ -52,11 +39,14 @@ export const TreeMenu = memo(() => {
         data => data.id === openedFolder,
       )[0].parent as string;
       setDefaultOpened([openedWorkspace, openedFolder]);
-    }
-    if (initDataRequestStatus === 'error' && initDataError) {
+    } else {
       alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
     }
-  }, [initDataError, initDataResponse, initDataRequestStatus]);
+  };
+
+  useEffect(() => {
+    handleTreeData();
+  }, []);
 
   const handleDrop = (newTreeData: Array<NodeModel<TreeDataProps>>) => {
     setTreeData(newTreeData);
