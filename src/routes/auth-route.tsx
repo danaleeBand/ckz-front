@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useAuthStore, useUserStore } from '@/stores';
-import { useAxios } from '@/hooks';
+import { useAuthStore } from '@/stores';
 import { logout } from '@/utils';
+import { AuthTokenGetResponse, getAuthToken } from '@/api';
 
 export const AuthRoute = () => {
   const { provider } = useParams();
@@ -11,82 +11,30 @@ export const AuthRoute = () => {
   const navigate = useNavigate();
 
   const { setAccessToken } = useAuthStore();
-  const { setUserName, setProfileImageUrl } = useUserStore();
-  const [jwtAccessToken, setJwtAccessToken] = useState('');
 
-  useEffect(() => {
-    if (provider !== 'kakao' && provider !== 'google') {
-      alert('잘못된 접근입니다.');
+  // 로그인 처리
+  const handleLogin = async () => {
+    if ((provider !== 'kakao' && provider !== 'google') || !code) {
+      alert('잘못된 요청입니다.');
       navigate('/');
+      return;
     }
-  }, [provider]);
 
-  // 1. 소셜 인증 code로 jwt 토큰 가져오기
-  const {
-    status: tokenRequestStatus,
-    response: tokenResponse,
-    error: tokenError,
-  } = useAxios(
-    {
-      url: `/auth/${provider}/token`,
-      method: 'GET',
-      params: { code },
-    },
-    true,
-  );
-
-  // jwt 토큰 저장
-  useEffect(() => {
-    if (tokenRequestStatus === 'success' && tokenResponse) {
-      const { accessToken } = tokenResponse.data;
+    // 소셜 인증 code로 jwt 토큰 가져오기
+    const tokenResponse = await getAuthToken(provider, code);
+    if (tokenResponse.success) {
+      const { accessToken } = tokenResponse.data as AuthTokenGetResponse;
       setAccessToken(accessToken);
-      setJwtAccessToken(accessToken);
-      // TODO: refresh token 처리
-    } else if (tokenRequestStatus === 'error' && tokenError) {
+    } else {
       alert('로그인에 실패했습니다.');
       logout();
-      navigate('/');
     }
-  }, [tokenError, tokenRequestStatus, tokenResponse]);
+    navigate('/');
+  };
 
-  // 2. 사용자 정보 가져오기
-  const {
-    status: userApiRequestStatus,
-    response: userApiResponse,
-    error: userApiError,
-    sendRequest: sendUserRequest,
-  } = useAxios({
-    url: '/user',
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${jwtAccessToken}`,
-    },
-  });
-
-  // 사용자 정보 요청
   useEffect(() => {
-    if (jwtAccessToken && userApiRequestStatus === 'idle') {
-      sendUserRequest();
-    }
-  }, [jwtAccessToken, userApiRequestStatus]);
-
-  // 사용자 정보 저장
-  useEffect(() => {
-    if (userApiRequestStatus === 'success' && userApiResponse) {
-      const {
-        name,
-        profile_image_url: imageUrl,
-        is_checky: isChecky,
-      } = userApiResponse.data;
-      setUserName(name);
-      setProfileImageUrl(imageUrl);
-      navigate(isChecky ? '/' : '/join');
-    } else if (userApiRequestStatus === 'error' && userApiError) {
-      alert('사용자 정보를 가져오는 데 실패했습니다.');
-      logout();
-      navigate('/');
-    }
-  }, [userApiRequestStatus, userApiError, userApiResponse]);
+    handleLogin();
+  }, []);
 
   return null;
 };
