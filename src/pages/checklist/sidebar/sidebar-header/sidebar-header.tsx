@@ -70,11 +70,13 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
         <Tooltip id='new-checklist' />
         {!isDropdownOpen && <Tooltip id='setting' />}
       </div>
-      <Dropdown
-        items={dropdownItems}
-        isOpen={isDropdownOpen}
-        setIsOpen={setIsDropdownOpen}
-      />
+      {isDropdownOpen && (
+        <Dropdown
+          items={dropdownItems}
+          isOpen={isDropdownOpen}
+          setIsOpen={setIsDropdownOpen}
+        />
+      )}
     </>
   );
 };

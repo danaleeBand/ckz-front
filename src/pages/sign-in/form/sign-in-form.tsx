@@ -1,69 +1,57 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, TextFieldStatus } from '@/components/ui';
 import { ProfileImageInput } from './profile-image-input';
 import { useUserStore } from '@/stores';
-import { useAxios } from '@/hooks';
+import { patchUser } from '@/api';
 
 export const SignInForm = memo(() => {
+  const navigate = useNavigate();
   const { name: userName, setUserName, setProfileImageUrl } = useUserStore();
-  const [imageUrl, setImageUrl] = useState<string>();
 
   const textInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string>();
   const [nickname, setNickname] = useState<string>(userName ?? '');
-  const [validationResult, setValidationResult] =
-    useState<TextFieldStatus>('error');
-
-  const navigate = useNavigate();
-  const { status, sendRequest } = useAxios({
-    url: '/user',
-    method: 'PATCH',
-  });
+  const [validationResult, setValidationResult] = useState<TextFieldStatus>(
+    userName && userName.length >= 2 ? 'confirm' : 'error',
+  );
 
   useEffect(() => {
     textInputRef.current?.focus();
   }, [textInputRef]);
 
-  useEffect(() => {
-    if (!nickname || nickname.length < 2) {
+  const handleInputOnChange = (value: string) => {
+    setNickname(value);
+
+    if (!value || value.length < 2) {
       setValidationResult('error');
     } else {
       setValidationResult('confirm');
     }
-  }, [nickname]);
+  };
 
   const handleSubmitButtonOnClick = async () => {
     if (validationResult === 'error') {
       textInputRef.current?.focus();
       return;
     }
-
-    if (status === 'idle') {
-      sendRequest({
-        data: {
-          name: nickname,
-          profile_image_url: imageUrl,
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (status === 'success') {
+    const response = await patchUser(nickname, imageUrl ?? '');
+    if (response.success) {
       setUserName(nickname);
       setProfileImageUrl(imageUrl ?? '');
-      // TODO: 다른 화면에서 처리할 듯, alert 말고 모달
       alert('yes!');
-      navigate('/');
-    } else if (status === 'error') {
+    } else {
       alert('오류가 발생했습니다. 다시 시도해주세요.');
     }
-  }, [navigate, status]);
+    navigate('/');
+  };
 
-  const labelStyle = `
+  const labelStyle = useMemo(() => {
+    return `
     font-bold text-sm pr-5
     dark:text-dark-text-primary-light
   `;
+  }, []);
 
   return (
     <div className='flex flex-col w-fit justify-center items-center'>
@@ -85,7 +73,7 @@ export const SignInForm = memo(() => {
               <TextField
                 type='text'
                 value={nickname}
-                onChange={value => setNickname(value as string)}
+                onChange={handleInputOnChange}
                 validationResult={validationResult}
                 textLimit={15}
                 helperText={

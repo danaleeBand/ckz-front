@@ -24,9 +24,3 @@ export type TreeWorkSpaceItemType = {
   folder: Array<TreeFolderItemType>;
   defaultFolder: Array<TreeCheckListItemType>;
 };
-
-export type TreeApiResponseType = {
-  data: {
-    workspace: Array<TreeWorkSpaceItemType>;
-  };
-};
