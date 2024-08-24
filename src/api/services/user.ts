@@ -9,3 +9,10 @@ export type UserGetResponse = {
 export const getUser = async () => {
   return apiRequest('/user', { method: 'GET' });
 };
+
+export const patchUser = async (name: string, profileImageUrl: string) => {
+  return apiRequest('/user', {
+    method: 'PATCH',
+    data: { name, profile_image_url: profileImageUrl },
+  });
+};
