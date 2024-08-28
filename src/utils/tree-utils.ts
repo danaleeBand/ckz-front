@@ -1,5 +1,5 @@
+import { TreeApiResponseType } from '@/api';
 import {
-  TreeApiResponseType,
   TreeCheckListItemType,
   TreeDataProps,
   TreeFolderItemType,
