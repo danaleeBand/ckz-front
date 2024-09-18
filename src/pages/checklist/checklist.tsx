@@ -6,7 +6,7 @@ import { ChecklistDocument } from './checklist-document';
 export const Checklist = () => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='w-screen flex flex-row'>
+      <div className='w-screen flex flex-row fixed inset-0 '>
         <Sidebar />
         <ChecklistDocument />
       </div>
