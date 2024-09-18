@@ -56,9 +56,9 @@ export const TreeItemEditing = ({
     }
 
     if (nodeType === 2) {
-      response = await patchChecklist(id, name, 1); // TODO: api 변경 대응
+      response = await patchChecklist(id, name);
     } else if (nodeType === 1) {
-      response = await patchFolder(1, id, name); // TODO: api 변경 대응
+      response = await patchFolder(id, name);
     }
 
     if (response?.success) {

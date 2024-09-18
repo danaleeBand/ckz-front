@@ -5,26 +5,22 @@ export type CreateFolderResponseType = {
 };
 
 export const postFolder = async (workspaceId: number, folderName: string) => {
-  return apiRequest(`/workspaces/${workspaceId}/folders`, {
+  return apiRequest('/folders', {
     method: 'POST',
-    data: { name: folderName },
+    data: { name: folderName, workspaceId },
   });
 };
 
-export const patchFolder = async (
-  workspaceId: number,
-  folderId: number,
-  folderName: string,
-) => {
-  return apiRequest(`/workspaces/${workspaceId}/folders/${folderId}`, {
+export const patchFolder = async (folderId: number, folderName: string) => {
+  return apiRequest(`/folders/${folderId}`, {
     method: 'PATCH',
     data: { name: folderName },
   });
 };
 
 // TODO: api 아직 없음
-export const deleteFolder = async (workspaceId: number, folderId: number) => {
-  return apiRequest(`/workspaces/${workspaceId}/folders/${folderId}`, {
+export const deleteFolder = async (folderId: number) => {
+  return apiRequest(`/folders/${folderId}`, {
     method: 'DELETE',
   });
 };

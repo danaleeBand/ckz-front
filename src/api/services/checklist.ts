@@ -8,28 +8,24 @@ export const postChecklist = async (
   folderId: number,
   checklistName: string,
 ) => {
-  return apiRequest(`/folders/${folderId}/checklists`, {
+  return apiRequest('/checklists', {
     method: 'POST',
-    data: { title: checklistName },
+    data: { title: checklistName, folderId },
   });
 };
 
 export const patchChecklist = async (
   checklistId: number,
   checklistName: string,
-  folderId: number,
 ) => {
-  return apiRequest(`/folders/${folderId}/checklists/${checklistId}`, {
+  return apiRequest(`/checklists/${checklistId}`, {
     method: 'PATCH',
     data: { title: checklistName },
   });
 };
 
-export const deleteChecklist = async (
-  checklistId: number,
-  folderId: number,
-) => {
-  return apiRequest(`/folders/${folderId}/checklists/${checklistId}`, {
+export const deleteChecklist = async (checklistId: number) => {
+  return apiRequest(`/checklists/${checklistId}`, {
     method: 'DELETE',
   });
 };

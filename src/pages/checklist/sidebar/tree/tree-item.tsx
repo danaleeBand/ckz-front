@@ -61,9 +61,9 @@ export const TreeItem = memo(
       const nodeId = getTreeItemId(node.id as string);
 
       if (type === 2) {
-        response = await deleteChecklist(nodeId, 1); // TODO: api 수정 예정
+        response = await deleteChecklist(nodeId);
       } else if (type === 1) {
-        // response = await deleteFolder(1, nodeId); // TODO: api 추가 예정
+        // response = await deleteFolder(nodeId); // TODO: api 추가 예정
       }
 
       if (response?.success) {
@@ -120,7 +120,11 @@ export const TreeItem = memo(
         )}
         <div className='text-basic truncate w-full'>{node.text}</div>
         {isHovering && (
-          <div className='flex justify-center items-center gap-2 mr-1 text-xs text-text-light dark:text-dark-text-dark hover:text-text-basic dark:hover:text-text-basic'>
+          <div
+            className='flex justify-center items-center gap-2 mr-1 text-xs
+            text-text-light dark:text-dark-text-dark
+            hover:text-text-basic dark:hover:text-text-basic'
+          >
             {getTreeItemType(node.id as string) !== 2 && (
               <>
                 {!depth && getAddItemButton('folder')}
