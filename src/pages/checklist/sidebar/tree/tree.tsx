@@ -45,6 +45,12 @@ export const TreeMenu = memo(() => {
     });
   };
 
+  const updateDefaultOpen = (newData: Array<string>) => {
+    setDefaultOpened(prevDefaultOpened => {
+      return [...prevDefaultOpened, ...newData];
+    });
+  };
+
   const handleDrop = useCallback(
     (newTreeData: Array<NodeModel<TreeDataDetailProps>>) => {
       setTreeData(newTreeData);
@@ -123,6 +129,10 @@ export const TreeMenu = memo(() => {
     async (nodeId: string) => {
       const newTreeData = treeData.filter(data => data.id !== nodeId);
       setTreeData(newTreeData);
+
+      if (selectedNodeId === nodeId) {
+        setSelectedNodeId(undefined);
+      }
     },
     [treeData],
   );
@@ -135,7 +145,7 @@ export const TreeMenu = memo(() => {
       const openedWorkspace = newData.filter(
         data => data.id === openedFolder,
       )[0]?.parent as string;
-      setDefaultOpened([...defaultOpened, openedWorkspace, openedFolder]);
+      updateDefaultOpen([openedWorkspace, openedFolder]);
     },
     [treeData, checklistId],
   );
@@ -143,12 +153,8 @@ export const TreeMenu = memo(() => {
   const handleTreeData = useCallback(async () => {
     const response = await getSidebarTree();
     if (response.success) {
-      console.log('response');
-      console.log(response);
       const initTreeData = formatTreeData(response as TreeApiResponseType);
       setTreeData(initTreeData);
-      console.log('initTreeData');
-      console.log(initTreeData);
     } else {
       alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
     }
