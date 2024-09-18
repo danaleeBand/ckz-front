@@ -16,7 +16,7 @@ export const patchFolder = async (
   folderId: number,
   folderName: string,
 ) => {
-  return apiRequest(`/workspaces/${workspaceId}/folder/${folderId}`, {
+  return apiRequest(`/workspaces/${workspaceId}/folders/${folderId}`, {
     method: 'PATCH',
     data: { name: folderName },
   });

@@ -6,6 +6,7 @@ import {
   faCaretDown,
   faCaretRight,
   faFolderPlus,
+  faPen,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { TreeDataProps } from '@/types';
@@ -19,10 +20,19 @@ export type TreeItemProps = {
   isSelected?: boolean;
   onToggle: (id: NodeModel['id']) => void;
   onNewItem?: (node: TreeDataProps, type: 'folder' | 'checklist') => void;
+  onEditItem?: () => void;
 };
 
 export const TreeItem = memo(
-  ({ node, depth, isOpen, isSelected, onToggle, onNewItem }: TreeItemProps) => {
+  ({
+    node,
+    depth,
+    isOpen,
+    isSelected,
+    onToggle,
+    onNewItem,
+    onEditItem,
+  }: TreeItemProps) => {
     const { setLastViewedChecklistId } = useChecklistStore();
     const navigate = useNavigate();
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
@@ -50,19 +60,14 @@ export const TreeItem = memo(
       };
 
       return (
-        <button
-          aria-label={`${itemName} 생성`}
-          title={`${itemName} 생성`}
-          onClick={handleAddItem}
-          className='hover:text-text-basic'
-        >
+        <button aria-label={`${itemName} 생성`} onClick={handleAddItem}>
           <FontAwesomeIcon icon={type === 'folder' ? faFolderPlus : faPlus} />
         </button>
       );
     }, []);
 
     const customStyle = useMemo(() => {
-      return `${getTreeItemType(node.id as string) === 2 ? 'px-7' : ''} ${
+      return `${getTreeItemType(node.id as string) === 2 ? 'pl-7' : ''} ${
         isSelected
           ? `bg-bg-darker dark:bg-dark-bg-lighter font-bold 
               text-text-primary dark:text-dark-text-primary`
@@ -92,10 +97,23 @@ export const TreeItem = memo(
           </button>
         )}
         <div className='text-basic truncate w-full'>{node.text}</div>
-        {isHovering && getTreeItemType(node.id as string) !== 2 && (
-          <div className='flex justify-center items-center gap-2 mr-1 text-xs text-text-light dark:text-dark-text-dark'>
-            {!depth && getAddItemButton('folder')}
-            {getAddItemButton('checklist')}
+        {isHovering && (
+          <div className='flex justify-center items-center gap-2 mr-1 text-xs text-text-light dark:text-dark-text-dark hover:text-text-basic dark:hover:text-text-basic'>
+            {getTreeItemType(node.id as string) !== 2 && (
+              <>
+                {!depth && getAddItemButton('folder')}
+                {getAddItemButton('checklist')}
+              </>
+            )}
+            <button
+              aria-label='이름 변경'
+              onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                event.stopPropagation();
+                onEditItem?.();
+              }}
+            >
+              <FontAwesomeIcon icon={faPen} />
+            </button>
           </div>
         )}
       </div>

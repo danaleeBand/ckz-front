@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/api';
 import { TreeItemEditing } from './tree-item-editing';
 
-export const TreeMenu = () => {
+export const TreeMenu = memo(() => {
   const [treeData, setTreeData] = useState<
     Array<NodeModel<TreeDataDetailProps>>
   >([]);
@@ -99,6 +99,26 @@ export const TreeMenu = () => {
     [treeData],
   );
 
+  const handleEditItem = useCallback(
+    (nodeId: string, isEditing: boolean, itemName?: string) => {
+      const newTreeData: Array<TreeDataProps> = treeData.map(data => {
+        if (data.id === nodeId) {
+          return {
+            ...data,
+            text: itemName || data.text,
+            data: {
+              ...data.data,
+              isEditing,
+            },
+          } as TreeDataProps;
+        }
+        return data as TreeDataProps;
+      });
+      setTreeData(newTreeData);
+    },
+    [treeData],
+  );
+
   const handleDefaultOpen = useCallback(
     (newData: Array<NodeModel<TreeDataDetailProps>>) => {
       const openedFolder = newData.filter(
@@ -142,7 +162,13 @@ export const TreeMenu = () => {
           node.data?.isDefaultFolder ? (
             <></>
           ) : node.data?.isEditing ? (
-            <TreeItemEditing node={node as TreeDataProps} depth={depth} />
+            <TreeItemEditing
+              node={node as TreeDataProps}
+              onEndEdit={itemName =>
+                handleEditItem(node.id as string, false, itemName)
+              }
+              depth={depth}
+            />
           ) : (
             <TreeItem
               node={node as TreeDataProps}
@@ -153,6 +179,7 @@ export const TreeMenu = () => {
               onNewItem={(node, type) =>
                 handleNewItem(node as TreeDataProps, type)
               }
+              onEditItem={() => handleEditItem(node.id as string, true)}
             />
           )
         }
@@ -183,4 +210,4 @@ export const TreeMenu = () => {
       />
     </DndProvider>
   );
-};
+});

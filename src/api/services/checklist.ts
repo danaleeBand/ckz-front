@@ -19,7 +19,7 @@ export const patchChecklist = async (
   checklistName: string,
   folderId: number,
 ) => {
-  return apiRequest(`/folders/${folderId}/checklist/${checklistId}`, {
+  return apiRequest(`/folders/${folderId}/checklists/${checklistId}`, {
     method: 'PATCH',
     data: { title: checklistName },
   });
@@ -29,7 +29,7 @@ export const deleteChecklist = async (
   checklistId: number,
   folderId: number,
 ) => {
-  return apiRequest(`/folders/${folderId}/checklist/${checklistId}`, {
+  return apiRequest(`/folders/${folderId}/checklists/${checklistId}`, {
     method: 'DELETE',
   });
 };
