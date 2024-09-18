@@ -105,15 +105,17 @@ export const TreeItem = memo(
                 {getAddItemButton('checklist')}
               </>
             )}
-            <button
-              aria-label='이름 변경'
-              onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                event.stopPropagation();
-                onEditItem?.();
-              }}
-            >
-              <FontAwesomeIcon icon={faPen} />
-            </button>
+            {getTreeItemType(node.id as string) !== 0 && (
+              <button
+                aria-label='이름 변경'
+                onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                  event.stopPropagation();
+                  onEditItem?.();
+                }}
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+            )}
           </div>
         )}
       </div>

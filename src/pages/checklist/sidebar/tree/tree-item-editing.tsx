@@ -58,9 +58,8 @@ export const TreeItemEditing = ({
     if (nodeType === 2) {
       response = await patchChecklist(id, name, 1); // TODO: api 변경 대응
     } else if (nodeType === 1) {
-      response = await patchFolder(1, id, name);
+      response = await patchFolder(1, id, name); // TODO: api 변경 대응
     }
-    // TODO: workspace 이름 변경
 
     if (response?.success) {
       onEndEdit(name);
