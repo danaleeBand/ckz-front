@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/api';
 import { TreeItemEditing } from './tree-item-editing';
 
-export const TreeMenu = memo(() => {
+export const TreeMenu = () => {
   const [treeData, setTreeData] = useState<
     Array<NodeModel<TreeDataDetailProps>>
   >([]);
@@ -38,6 +38,12 @@ export const TreeMenu = memo(() => {
   const navigate = useNavigate();
   const params = useParams();
   const { checklistId } = params;
+
+  const updateTreeData = (newData: TreeDataProps) => {
+    setTreeData(prevTreeData => {
+      return [...prevTreeData, newData];
+    });
+  };
 
   const handleDrop = useCallback(
     (newTreeData: Array<NodeModel<TreeDataDetailProps>>) => {
@@ -54,11 +60,6 @@ export const TreeMenu = memo(() => {
       const isDefaultFolderItem = !isFolder && node.data.type === 0;
       const parent = isDefaultFolderItem ? node.data.defaultFolderId : node.id;
       const parentId = getTreeItemId(parent as string);
-
-      console.log('isFolder', isFolder);
-      console.log('isDefaultFolderItem', isDefaultFolderItem);
-      console.log('parent', parent);
-      console.log('parentId', parentId);
 
       if (isFolder) {
         response = await postFolder(parentId, '제목 없음');
@@ -86,8 +87,7 @@ export const TreeMenu = memo(() => {
           },
         };
 
-        const newTreeData = [...treeData, newItem];
-        setTreeData(newTreeData);
+        updateTreeData(newItem);
 
         if (!isFolder) {
           navigate(`/${returnData.id}`);
@@ -109,7 +109,7 @@ export const TreeMenu = memo(() => {
       )[0]?.parent as string;
       setDefaultOpened([...defaultOpened, openedWorkspace, openedFolder]);
     },
-    [checklistId],
+    [treeData, checklistId],
   );
 
   const handleTreeData = useCallback(async () => {
@@ -131,7 +131,7 @@ export const TreeMenu = memo(() => {
       handleDefaultOpen(treeData);
       setSelectedNodeId(`2-${checklistId}`);
     }
-  }, [checklistId]);
+  }, [treeData, checklistId]);
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
@@ -183,4 +183,4 @@ export const TreeMenu = memo(() => {
       />
     </DndProvider>
   );
-});
+};
