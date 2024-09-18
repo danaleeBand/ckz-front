@@ -1,25 +1,32 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NodeModel, useDragOver } from '@minoru/react-dnd-treeview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCaretDown,
+  faCaretRight,
+  faFolderPlus,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { useChecklistStore } from '@/stores';
 
 export type TreeItemProps = {
-  node: NodeModel<TreeDataProps>;
+  node: TreeDataProps;
   depth: number;
   isOpen: boolean;
-  isSelected: boolean;
+  isSelected?: boolean;
   onToggle: (id: NodeModel['id']) => void;
+  onNewItem?: (node: TreeDataProps, type: 'folder' | 'checklist') => void;
 };
 
 export const TreeItem = memo(
-  ({ node, depth, isOpen, isSelected, onToggle }: TreeItemProps) => {
+  ({ node, depth, isOpen, isSelected, onToggle, onNewItem }: TreeItemProps) => {
     const { setLastViewedChecklistId } = useChecklistStore();
     const navigate = useNavigate();
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
+    const [isHovering, setIsHovering] = useState(false);
 
     const handleOnClick = useCallback(
       (e: React.MouseEvent) => {
@@ -33,6 +40,26 @@ export const TreeItem = memo(
       },
       [node.id, onToggle],
     );
+
+    const getAddItemButton = useCallback((type: 'folder' | 'checklist') => {
+      const itemName = type === 'folder' ? '폴더' : '체크리스트';
+
+      const handleAddItem = (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        onNewItem?.(node, type);
+      };
+
+      return (
+        <button
+          aria-label={`${itemName} 생성`}
+          title={`${itemName} 생성`}
+          onClick={handleAddItem}
+          className='hover:text-text-basic'
+        >
+          <FontAwesomeIcon icon={type === 'folder' ? faFolderPlus : faPlus} />
+        </button>
+      );
+    }, []);
 
     const customStyle = useMemo(() => {
       return `${getTreeItemType(node.id as string) === 2 ? 'px-7' : ''} ${
@@ -51,18 +78,26 @@ export const TreeItem = memo(
           rounded-md
           ${customStyle}`}
         onClick={handleOnClick}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
         {...dragOverProps}
       >
         {node.droppable && (
-          <div
+          <button
             className={`w-4 h-4 flex justify-center items-center 
             text-xs text-text-light dark:text-dark-text-dark`}
           >
             {isOpen && <FontAwesomeIcon icon={faCaretDown} />}
             {!isOpen && <FontAwesomeIcon icon={faCaretRight} />}
-          </div>
+          </button>
         )}
         <div className='text-basic truncate w-full'>{node.text}</div>
+        {isHovering && getTreeItemType(node.id as string) !== 2 && (
+          <div className='flex justify-center items-center gap-2 mr-1 text-xs text-text-light dark:text-dark-text-dark'>
+            {!depth && getAddItemButton('folder')}
+            {getAddItemButton('checklist')}
+          </div>
+        )}
       </div>
     );
   },
