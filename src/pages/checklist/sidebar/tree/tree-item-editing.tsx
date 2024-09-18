@@ -48,7 +48,7 @@ export const TreeItemEditing = ({
 
     const nodeType = getTreeItemType(node.id);
     const id = getTreeItemId(node.id);
-    const name = ref.current?.value;
+    const name = ref.current?.value?.trim();
 
     if (!name) {
       onEndEdit();
