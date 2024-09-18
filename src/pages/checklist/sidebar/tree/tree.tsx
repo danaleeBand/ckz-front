@@ -119,6 +119,14 @@ export const TreeMenu = memo(() => {
     [treeData],
   );
 
+  const handleDeleteItem = useCallback(
+    async (nodeId: string) => {
+      const newTreeData = treeData.filter(data => data.id !== nodeId);
+      setTreeData(newTreeData);
+    },
+    [treeData],
+  );
+
   const handleDefaultOpen = useCallback(
     (newData: Array<NodeModel<TreeDataDetailProps>>) => {
       const openedFolder = newData.filter(
@@ -135,8 +143,12 @@ export const TreeMenu = memo(() => {
   const handleTreeData = useCallback(async () => {
     const response = await getSidebarTree();
     if (response.success) {
+      console.log('response');
+      console.log(response);
       const initTreeData = formatTreeData(response as TreeApiResponseType);
       setTreeData(initTreeData);
+      console.log('initTreeData');
+      console.log(initTreeData);
     } else {
       alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
     }
@@ -180,6 +192,7 @@ export const TreeMenu = memo(() => {
                 handleNewItem(node as TreeDataProps, type)
               }
               onEditItem={() => handleEditItem(node.id as string, true)}
+              onDeleteItem={() => handleDeleteItem(node.id as string)}
             />
           )
         }

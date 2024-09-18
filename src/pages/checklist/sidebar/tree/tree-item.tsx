@@ -8,10 +8,12 @@ import {
   faFolderPlus,
   faPen,
   faPlus,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { useChecklistStore } from '@/stores';
+import { deleteChecklist, deleteFolder } from '@/api';
 
 export type TreeItemProps = {
   node: TreeDataProps;
@@ -21,6 +23,7 @@ export type TreeItemProps = {
   onToggle: (id: NodeModel['id']) => void;
   onNewItem?: (node: TreeDataProps, type: 'folder' | 'checklist') => void;
   onEditItem?: () => void;
+  onDeleteItem?: () => void;
 };
 
 export const TreeItem = memo(
@@ -32,6 +35,7 @@ export const TreeItem = memo(
     onToggle,
     onNewItem,
     onEditItem,
+    onDeleteItem,
   }: TreeItemProps) => {
     const { setLastViewedChecklistId } = useChecklistStore();
     const navigate = useNavigate();
@@ -50,6 +54,24 @@ export const TreeItem = memo(
       },
       [node.id, onToggle],
     );
+
+    const handleDeleteItem = useCallback(async () => {
+      let response;
+      const type = getTreeItemType(node.id as string);
+      const nodeId = getTreeItemId(node.id as string);
+
+      if (type === 2) {
+        response = await deleteChecklist(nodeId, 1); // TODO: api 수정 예정
+      } else if (type === 1) {
+        // response = await deleteFolder(1, nodeId); // TODO: api 추가 예정
+      }
+
+      if (response?.success) {
+        onDeleteItem?.();
+      } else {
+        alert('실패');
+      }
+    }, [node.id]);
 
     const getAddItemButton = useCallback((type: 'folder' | 'checklist') => {
       const itemName = type === 'folder' ? '폴더' : '체크리스트';
@@ -106,15 +128,26 @@ export const TreeItem = memo(
               </>
             )}
             {getTreeItemType(node.id as string) !== 0 && (
-              <button
-                aria-label='이름 변경'
-                onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                  event.stopPropagation();
-                  onEditItem?.();
-                }}
-              >
-                <FontAwesomeIcon icon={faPen} />
-              </button>
+              <>
+                <button
+                  aria-label='이름 변경'
+                  onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                    event.stopPropagation();
+                    onEditItem?.();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPen} />
+                </button>
+                <button
+                  aria-label='항목 삭제'
+                  onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                    event.stopPropagation();
+                    handleDeleteItem();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </>
             )}
           </div>
         )}

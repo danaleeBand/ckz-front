@@ -21,3 +21,10 @@ export const patchFolder = async (
     data: { name: folderName },
   });
 };
+
+// TODO: api 아직 없음
+export const deleteFolder = async (workspaceId: number, folderId: number) => {
+  return apiRequest(`/workspaces/${workspaceId}/folders/${folderId}`, {
+    method: 'DELETE',
+  });
+};
