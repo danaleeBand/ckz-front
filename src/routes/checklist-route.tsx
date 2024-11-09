@@ -15,7 +15,7 @@ export const ChecklistRoute = () => {
       let checkListId;
       const initTreeData = formatTreeData(response as TreeApiResponseType);
       const checklists = initTreeData
-        .filter(item => item.type === 2)
+        .filter(item => item.data.type === 2)
         .map(item => getTreeItemId(item.id));
 
       if (lastViewedChecklistId && checklists.includes(lastViewedChecklistId)) {

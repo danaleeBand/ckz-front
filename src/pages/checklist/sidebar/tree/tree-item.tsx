@@ -1,25 +1,46 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NodeModel, useDragOver } from '@minoru/react-dnd-treeview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCaretDown,
+  faCaretRight,
+  faFolderPlus,
+  faPen,
+  faPlus,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { useChecklistStore } from '@/stores';
+import { deleteChecklist, deleteFolder } from '@/api';
 
 export type TreeItemProps = {
-  node: NodeModel<TreeDataProps>;
+  node: TreeDataProps;
   depth: number;
   isOpen: boolean;
-  isSelected: boolean;
+  isSelected?: boolean;
   onToggle: (id: NodeModel['id']) => void;
+  onNewItem?: (node: TreeDataProps, type: 'folder' | 'checklist') => void;
+  onEditItem?: () => void;
+  onDeleteItem?: () => void;
 };
 
 export const TreeItem = memo(
-  ({ node, depth, isOpen, isSelected, onToggle }: TreeItemProps) => {
+  ({
+    node,
+    depth,
+    isOpen,
+    isSelected,
+    onToggle,
+    onNewItem,
+    onEditItem,
+    onDeleteItem,
+  }: TreeItemProps) => {
     const { setLastViewedChecklistId } = useChecklistStore();
     const navigate = useNavigate();
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
+    const [isHovering, setIsHovering] = useState(false);
 
     const handleOnClick = useCallback(
       (e: React.MouseEvent) => {
@@ -34,8 +55,47 @@ export const TreeItem = memo(
       [node.id, onToggle],
     );
 
+    const handleDeleteItem = useCallback(async () => {
+      // TODO: alert, confirm 컴포넌트 추가 예정
+      const isDeleteConfirmed = window.confirm('정말 삭제하시겠습니까?');
+
+      if (!isDeleteConfirmed) {
+        return;
+      }
+      let response;
+      const type = getTreeItemType(node.id as string);
+      const nodeId = getTreeItemId(node.id as string);
+
+      if (type === 2) {
+        response = await deleteChecklist(nodeId);
+      } else if (type === 1) {
+        // response = await deleteFolder(nodeId); // TODO: api 추가 예정
+      }
+
+      if (response?.success) {
+        onDeleteItem?.();
+      } else {
+        alert('실패');
+      }
+    }, [node.id]);
+
+    const getAddItemButton = useCallback((type: 'folder' | 'checklist') => {
+      const itemName = type === 'folder' ? '폴더' : '체크리스트';
+
+      const handleAddItem = (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        onNewItem?.(node, type);
+      };
+
+      return (
+        <button aria-label={`${itemName} 생성`} onClick={handleAddItem}>
+          <FontAwesomeIcon icon={type === 'folder' ? faFolderPlus : faPlus} />
+        </button>
+      );
+    }, []);
+
     const customStyle = useMemo(() => {
-      return `${getTreeItemType(node.id as string) === 2 ? 'px-7' : ''} ${
+      return `${getTreeItemType(node.id as string) === 2 ? 'pl-7' : ''} ${
         isSelected
           ? `bg-bg-darker dark:bg-dark-bg-lighter font-bold 
               text-text-primary dark:text-dark-text-primary`
@@ -51,18 +111,56 @@ export const TreeItem = memo(
           rounded-md
           ${customStyle}`}
         onClick={handleOnClick}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
         {...dragOverProps}
       >
         {node.droppable && (
-          <div
+          <button
             className={`w-4 h-4 flex justify-center items-center 
             text-xs text-text-light dark:text-dark-text-dark`}
           >
             {isOpen && <FontAwesomeIcon icon={faCaretDown} />}
             {!isOpen && <FontAwesomeIcon icon={faCaretRight} />}
-          </div>
+          </button>
         )}
         <div className='text-basic truncate w-full'>{node.text}</div>
+        {isHovering && (
+          <div
+            className='flex justify-center items-center gap-2 mr-1 text-xs
+            text-text-light dark:text-dark-text-dark
+            hover:text-text-basic dark:hover:text-text-basic'
+          >
+            {getTreeItemType(node.id as string) !== 2 && (
+              <>
+                {!depth && getAddItemButton('folder')}
+                {getAddItemButton('checklist')}
+              </>
+            )}
+            {getTreeItemType(node.id as string) !== 0 && (
+              <>
+                <button
+                  aria-label='이름 변경'
+                  onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                    event.stopPropagation();
+                    onEditItem?.();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPen} />
+                </button>
+                <button
+                  aria-label='항목 삭제'
+                  onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                    event.stopPropagation();
+                    handleDeleteItem();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     );
   },

@@ -8,7 +8,7 @@ export const Sidebar = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleDrag = (clientX: number) => {
-    setWidth(Math.max(175, Math.min(800, clientX)));
+    setWidth(Math.max(200, Math.min(800, clientX)));
   };
 
   return (
@@ -17,7 +17,7 @@ export const Sidebar = () => {
       className='flex flex-row relative bg-bg-dark dark:bg-dark-bg-light'
       style={{ width: `${width}px` }}
     >
-      <div className='w-full gap-1'>
+      <div className='w-full h-full flex flex-col gap-1 '>
         <SidebarHeader width={width} />
         <TreeMenu />
       </div>

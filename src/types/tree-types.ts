@@ -3,8 +3,16 @@ export type TreeDataProps = {
   parent: string;
   droppable?: boolean;
   text: string;
+  data: TreeDataDetailProps;
+};
+
+export type TreeDataDetailProps = {
   depth: number;
   type: 0 | 1 | 2;
+  isDefaultFolder?: boolean;
+  isDefaultFolderItem?: boolean;
+  defaultFolderId?: string;
+  isEditing?: boolean;
 };
 
 export type TreeCheckListItemType = {
@@ -22,5 +30,5 @@ export type TreeWorkSpaceItemType = {
   id: number;
   name: string;
   folder: Array<TreeFolderItemType>;
-  defaultFolder: Array<TreeCheckListItemType>;
+  defaultFolder: TreeFolderItemType;
 };

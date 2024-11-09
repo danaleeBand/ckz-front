@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import { DragLayerMonitorProps } from '@minoru/react-dnd-treeview';
-import { TreeDataProps } from '@/types';
+import { TreeDataDetailProps } from '@/types';
 
 export type DragItemProps = {
-  monitorProps: DragLayerMonitorProps<TreeDataProps>;
+  monitorProps: DragLayerMonitorProps<TreeDataDetailProps>;
 };
 
 export const TreeItemDragPreview = memo(({ monitorProps }: DragItemProps) => {
