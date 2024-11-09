@@ -56,6 +56,12 @@ export const TreeItem = memo(
     );
 
     const handleDeleteItem = useCallback(async () => {
+      // TODO: alert, confirm 컴포넌트 추가 예정
+      const isDeleteConfirmed = window.confirm('정말 삭제하시겠습니까?');
+
+      if (!isDeleteConfirmed) {
+        return;
+      }
       let response;
       const type = getTreeItemType(node.id as string);
       const nodeId = getTreeItemId(node.id as string);
