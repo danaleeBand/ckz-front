@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 export type AuthStore = {
   accessToken: string | null;
@@ -9,12 +9,11 @@ export type AuthStore = {
 export const useAuthStore = create(
   persist<AuthStore>(
     set => ({
-      accessToken: null,
+      accessToken: localStorage.getItem('accessToken') || null,
       setAccessToken: (accessToken: string | null) => set({ accessToken }),
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );
