@@ -3,7 +3,7 @@ import apiRequest from '../api';
 
 export type TreeApiResponseType = {
   data: {
-    workspace: Array<TreeWorkSpaceItemType>;
+    workspaces: Array<TreeWorkSpaceItemType>;
   };
 };
 
