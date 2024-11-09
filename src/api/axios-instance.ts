@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores';
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_BASE_URL,
   timeout: 4000,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
