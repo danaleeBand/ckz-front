@@ -23,12 +23,12 @@ export type TreeCheckListItemType = {
 export type TreeFolderItemType = {
   id: number;
   name: string;
-  checklist: Array<TreeCheckListItemType>;
+  checklists: Array<TreeCheckListItemType>;
 };
 
 export type TreeWorkSpaceItemType = {
   id: number;
   name: string;
-  folder: Array<TreeFolderItemType>;
+  folders: Array<TreeFolderItemType>;
   defaultFolder: TreeFolderItemType;
 };

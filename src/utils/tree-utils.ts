@@ -27,73 +27,79 @@ export const getTreeItemType = (id: string) => {
 export const formatTreeData = (apiResponse: TreeApiResponseType) => {
   const treeData: Array<TreeDataProps> = [];
 
-  apiResponse.data.workspace.forEach((workspaceItem: TreeWorkSpaceItemType) => {
-    const workSpaceId = setTreeItemId(workspaceItem.id, 0);
-    const defaultFolder = { ...workspaceItem.defaultFolder };
-    const defaultFolderId = setTreeItemId(defaultFolder.id, 1);
+  apiResponse.data.workspaces.forEach(
+    (workspaceItem: TreeWorkSpaceItemType) => {
+      const workSpaceId = setTreeItemId(workspaceItem.id, 0);
+      const defaultFolder = { ...workspaceItem.defaultFolder };
+      const defaultFolderId = setTreeItemId(defaultFolder.id, 1);
 
-    treeData.push({
-      id: workSpaceId,
-      parent: 'root',
-      droppable: true,
-      text: workspaceItem.name,
-      data: {
-        depth: 0,
-        type: 0,
-        defaultFolderId,
-      },
-    });
-
-    workspaceItem.folder?.forEach((folderItem: TreeFolderItemType) => {
-      const folderId = setTreeItemId(folderItem.id, 1);
       treeData.push({
-        id: folderId,
-        parent: workSpaceId,
+        id: workSpaceId,
+        parent: 'root',
         droppable: true,
-        text: folderItem.name,
+        text: workspaceItem.name,
+        data: {
+          depth: 0,
+          type: 0,
+          defaultFolderId,
+        },
+      });
+
+      workspaceItem.folders?.forEach((folderItem: TreeFolderItemType) => {
+        const folderId = setTreeItemId(folderItem.id, 1);
+        treeData.push({
+          id: folderId,
+          parent: workSpaceId,
+          droppable: true,
+          text: folderItem.name,
+          data: {
+            depth: 1,
+            type: 1,
+          },
+        });
+
+        folderItem.checklists?.forEach(
+          (checklistItem: TreeCheckListItemType) => {
+            treeData.push({
+              id: setTreeItemId(checklistItem.id, 2),
+              parent: folderId,
+              text: checklistItem.title,
+              data: {
+                depth: 2,
+                type: 2,
+              },
+            });
+          },
+        );
+      });
+
+      treeData.push({
+        id: defaultFolderId,
+        parent: workSpaceId,
+        text: '기본 폴더',
         data: {
           depth: 1,
           type: 1,
+          isDefaultFolder: true,
         },
       });
 
-      folderItem.checklist?.forEach((checklistItem: TreeCheckListItemType) => {
-        treeData.push({
-          id: setTreeItemId(checklistItem.id, 2),
-          parent: folderId,
-          text: checklistItem.title,
-          data: {
-            depth: 2,
-            type: 2,
-          },
-        });
-      });
-    });
-
-    treeData.push({
-      id: defaultFolderId,
-      parent: workSpaceId,
-      text: '기본 폴더',
-      data: {
-        depth: 1,
-        type: 1,
-        isDefaultFolder: true,
-      },
-    });
-
-    defaultFolder.checklist?.forEach((checklistItem: TreeCheckListItemType) => {
-      treeData.push({
-        id: setTreeItemId(checklistItem.id, 2),
-        parent: workSpaceId,
-        text: checklistItem.title,
-        data: {
-          depth: 1,
-          type: 2,
-          isDefaultFolderItem: true,
+      defaultFolder.checklists?.forEach(
+        (checklistItem: TreeCheckListItemType) => {
+          treeData.push({
+            id: setTreeItemId(checklistItem.id, 2),
+            parent: workSpaceId,
+            text: checklistItem.title,
+            data: {
+              depth: 1,
+              type: 2,
+              isDefaultFolderItem: true,
+            },
+          });
         },
-      });
-    });
-  });
+      );
+    },
+  );
   return treeData;
 };
 
