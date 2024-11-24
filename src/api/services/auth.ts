@@ -11,3 +11,9 @@ export const getAuthToken = async (provider: string, code: string) => {
     params: { code },
   });
 };
+
+export const requestLogout = async () => {
+  return apiRequest('/auth/logout', {
+    method: 'DELETE',
+  });
+};

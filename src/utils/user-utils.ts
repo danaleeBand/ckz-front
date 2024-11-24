@@ -1,3 +1,4 @@
+import { requestLogout } from '@/api';
 import { useAuthStore, useChecklistStore, useUserStore } from '@/stores';
 
 export const logout = () => {
@@ -5,8 +6,10 @@ export const logout = () => {
   const { setUserName, setProfileImageUrl } = useUserStore.getState();
   const { setLastViewedChecklistId } = useChecklistStore.getState();
 
-  // TODO: 서버에 로그아웃 요청 보내기
+  // backend 로그아웃 처리
+  requestLogout();
 
+  // store 초기화
   setAccessToken(null);
   setUserName(null);
   setProfileImageUrl(null);
