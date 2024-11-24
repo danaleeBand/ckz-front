@@ -1,3 +1,4 @@
+import { apiRoutes } from '@/constants/api';
 import apiRequest from '../api';
 
 export type AuthTokenGetResponse = {
@@ -6,14 +7,15 @@ export type AuthTokenGetResponse = {
 };
 
 export const getAuthToken = async (provider: string, code: string) => {
-  return apiRequest(`/auth/${provider}/token`, {
+  return apiRequest(apiRoutes.auth.AUTH_TOKEN, {
     method: 'GET',
     params: { code },
+    pathParams: { provider },
   });
 };
 
 export const requestLogout = async () => {
-  return apiRequest('/auth/logout', {
+  return apiRequest(apiRoutes.auth.LOGOUT, {
     method: 'DELETE',
   });
 };

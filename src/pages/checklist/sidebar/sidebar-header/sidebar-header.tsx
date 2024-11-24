@@ -5,6 +5,7 @@ import { faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Avatar, Dropdown, DropdownItemProps, Tooltip } from '@/components/ui';
 import { useUserStore } from '@/stores';
 import { logout } from '@/utils';
+import { pageRoutes } from '@/constants';
 
 export type SidebarHeaderProps = {
   width: number;
@@ -30,7 +31,7 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
         id: 2,
         onClick: () => {
           logout();
-          navigate('/login');
+          navigate(pageRoutes.LOGIN);
         },
       },
     ];

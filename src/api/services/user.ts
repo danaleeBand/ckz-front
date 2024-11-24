@@ -1,3 +1,4 @@
+import { apiRoutes } from '@/constants/api';
 import apiRequest from '../api';
 
 export type UserGetResponse = {
@@ -7,11 +8,11 @@ export type UserGetResponse = {
 };
 
 export const getUser = async () => {
-  return apiRequest('/users', { method: 'GET' });
+  return apiRequest(apiRoutes.user.BASE, { method: 'GET' });
 };
 
 export const patchUser = async (name: string, profileImageUrl: string) => {
-  return apiRequest('/users', {
+  return apiRequest(apiRoutes.user.BASE, {
     method: 'PATCH',
     data: { name, profile_image_url: profileImageUrl },
   });

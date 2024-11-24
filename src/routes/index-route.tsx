@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { isUserAuthenticated, logout } from '@/utils';
 import { getUser, UserGetResponse } from '@/api';
 import { useAuthStore, useUserStore } from '@/stores';
+import { pageRoutes } from '@/constants';
 
 export const IndexRoute = () => {
   const navigate = useNavigate();
@@ -22,9 +23,9 @@ export const IndexRoute = () => {
       setProfileImageUrl(imageUrl);
 
       if (isChecky) {
-        navigate('/checklist');
+        navigate(pageRoutes.CHECKLIST);
       } else {
-        navigate('/join');
+        navigate(pageRoutes.JOIN);
       }
     } else {
       alert('사용자 정보를 가져오는데 실패했습니다.');
@@ -35,7 +36,7 @@ export const IndexRoute = () => {
 
   useEffect(() => {
     if (!accessToken || !isUserAuthenticated()) {
-      navigate('/login');
+      navigate(pageRoutes.LOGIN);
     } else {
       getUserInfo();
     }

@@ -1,5 +1,6 @@
 import { TreeWorkSpaceItemType } from '@/types';
 import apiRequest from '../api';
+import { apiRoutes } from '@/constants/api';
 
 export type TreeApiResponseType = {
   data: {
@@ -8,5 +9,5 @@ export type TreeApiResponseType = {
 };
 
 export const getSidebarTree = async () => {
-  return apiRequest('/sidebar/tree', { method: 'GET' });
+  return apiRequest(apiRoutes.sidebar.TREE, { method: 'GET' });
 };

@@ -12,16 +12,32 @@ type ApiRequestOptions = {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   data?: unknown;
   params?: unknown;
+  pathParams?: { [key: string]: string | number };
+};
+
+const replacePathVariables = (
+  path: string,
+  params: { [key: string]: string | number },
+): string => {
+  return path.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => {
+    if (!(key in params)) {
+      throw new Error(`Missing value for path variable: ${key}`);
+    }
+    return String(params[key]);
+  });
 };
 
 const apiRequest = async <T = unknown>(
   url: string,
   options: ApiRequestOptions,
 ): Promise<ApiResponse<T>> => {
+  const { pathParams, ...axiosOptions } = options;
+  const resolvedUrl = pathParams ? replacePathVariables(url, pathParams) : url;
+
   try {
     const response = await axiosInstance.request({
-      url,
-      ...options,
+      url: resolvedUrl,
+      ...axiosOptions,
     });
     console.log('response', response);
     return {
