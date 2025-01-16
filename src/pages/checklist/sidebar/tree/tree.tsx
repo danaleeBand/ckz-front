@@ -76,16 +76,6 @@ export const TreeMenu = memo(() => {
 
   const handleEditItem = useCallback(
     (nodeId: string, isEditing: boolean, itemName?: string) => {
-      // TODO: 하던중
-      console.log(
-        'nodeId',
-        nodeId,
-        'isEditing',
-        isEditing,
-        'itemName',
-        itemName,
-      );
-
       const itemId = getTreeItemId(nodeId);
       const itemType = getTreeItemType(nodeId) === 2 ? 'checklist' : 'folder';
 
@@ -156,10 +146,6 @@ export const TreeMenu = memo(() => {
       setSelectedNodeId(`2-${checklistId}`);
     }
   }, [treeData, checklistId]);
-
-  useEffect(() => {
-    console.log('treeData updated', treeData);
-  }, [treeData]);
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
