@@ -28,8 +28,8 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
       {
         name: '로그아웃',
         id: 2,
-        onClick: () => {
-          logout();
+        onClick: async () => {
+          await logout();
           navigate('/login');
         },
       },
