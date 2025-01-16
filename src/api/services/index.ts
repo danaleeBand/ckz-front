@@ -1,5 +1,5 @@
 export * from './auth';
 export * from './user';
-export * from './tree';
+export * from './sidebar';
 export * from './checklist';
 export * from './folder';

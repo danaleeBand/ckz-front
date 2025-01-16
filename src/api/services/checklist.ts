@@ -1,31 +1,31 @@
 import apiRequest from '../api';
+import {
+  DeleteSidebarItemPayload,
+  PatchSidebarItemPayload,
+  PostSidebarItemPayload,
+  PostSidebarItemResponse,
+} from '../models';
 
-export type CreateChecklistResponseType = {
-  id: number;
-};
-
-export const postChecklist = async (
-  folderId: number,
-  checklistName: string,
-) => {
-  return apiRequest('/checklists', {
+export const postChecklist = async ({
+  parentId,
+  name,
+}: PostSidebarItemPayload) => {
+  const response = await apiRequest('/checklists', {
     method: 'POST',
-    data: { title: checklistName, folderId },
+    data: { title: name, folderId: parentId },
   });
+  return response.data as PostSidebarItemResponse;
 };
 
-export const patchChecklist = async (
-  checklistId: number,
-  checklistName: string,
-) => {
-  return apiRequest(`/checklists/${checklistId}`, {
+export const patchChecklist = async ({ id, name }: PatchSidebarItemPayload) => {
+  return apiRequest(`/checklists/${id}`, {
     method: 'PATCH',
-    data: { title: checklistName },
+    data: { title: name },
   });
 };
 
-export const deleteChecklist = async (checklistId: number) => {
-  return apiRequest(`/checklists/${checklistId}`, {
+export const deleteChecklist = async ({ id }: DeleteSidebarItemPayload) => {
+  return apiRequest(`/checklists/${id}`, {
     method: 'DELETE',
   });
 };

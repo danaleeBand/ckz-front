@@ -18,12 +18,14 @@ export type TreeDataDetailProps = {
 export type TreeCheckListItemType = {
   id: number;
   title: string;
+  isEditing?: boolean;
 };
 
 export type TreeFolderItemType = {
   id: number;
   name: string;
   checklists: Array<TreeCheckListItemType>;
+  isEditing?: boolean;
 };
 
 export type TreeWorkSpaceItemType = {
@@ -32,3 +34,6 @@ export type TreeWorkSpaceItemType = {
   folders: Array<TreeFolderItemType>;
   defaultFolder: TreeFolderItemType;
 };
+
+export type SidebarItemType = 'folder' | 'checklist';
+export type SidebarAllItemType = SidebarItemType | 'workspace';

@@ -8,42 +8,31 @@ import {
   getBackendOptions,
   DragLayerMonitorProps,
 } from '@minoru/react-dnd-treeview';
-import { TreeDataDetailProps, TreeDataProps } from '@/types';
-import {
-  formatTreeData,
-  getTreeItemId,
-  getTreeItemType,
-  isDroppableTreeItem,
-} from '@/utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { SidebarItemType, TreeDataDetailProps, TreeDataProps } from '@/types';
+import { getTreeItemId, getTreeItemType, isDroppableTreeItem } from '@/utils';
 import { TreeItem } from './tree-item';
 import { TreeItemDragPreview } from './tree-item-dragging';
 import { TreePlaceholder } from './tree-item-placeholder';
 import {
-  CreateChecklistResponseType,
-  CreateFolderResponseType,
-  getSidebarTree,
-  postChecklist,
-  postFolder,
-  TreeApiResponseType,
+  SidebarApiResponseType,
+  SidebarQueryKeys,
+  useAddSidebarItemMutation,
+  useSidebarQuery,
 } from '@/api';
 import { TreeItemEditing } from './tree-item-editing';
 
 export const TreeMenu = memo(() => {
-  const [treeData, setTreeData] = useState<
-    Array<NodeModel<TreeDataDetailProps>>
-  >([]);
-  const [defaultOpened, setDefaultOpened] = useState<Array<string>>([]);
-  const [selectedNodeId, setSelectedNodeId] = useState<string>();
-
   const navigate = useNavigate();
   const params = useParams();
   const { checklistId } = params;
 
-  const updateTreeData = (newData: TreeDataProps) => {
-    setTreeData(prevTreeData => {
-      return [...prevTreeData, newData];
-    });
-  };
+  const queryClient = useQueryClient();
+  const { data: treeData } = useSidebarQuery(true);
+  const { mutate: addItemMutate } = useAddSidebarItemMutation();
+
+  const [defaultOpened, setDefaultOpened] = useState<Array<string>>([]);
+  const [selectedNodeId, setSelectedNodeId] = useState<string>();
 
   const updateDefaultOpen = (newData: Array<string>) => {
     setDefaultOpened(prevDefaultOpened => {
@@ -53,89 +42,136 @@ export const TreeMenu = memo(() => {
 
   const handleDrop = useCallback(
     (newTreeData: Array<NodeModel<TreeDataDetailProps>>) => {
-      setTreeData(newTreeData);
+      // TODO: 순서 바꾸기 api 추가
     },
     [],
   );
 
   const handleNewItem = useCallback(
-    async (node: TreeDataProps, type: 'folder' | 'checklist') => {
-      let response;
-
+    (node: TreeDataProps, type: SidebarItemType) => {
       const isFolder = type === 'folder';
       const isDefaultFolderItem = !isFolder && node.data.type === 0;
+
       const parent = isDefaultFolderItem ? node.data.defaultFolderId : node.id;
       const parentId = getTreeItemId(parent as string);
 
-      if (isFolder) {
-        response = await postFolder(parentId, '제목 없음');
-      } else {
-        response = await postChecklist(parentId, '제목 없음');
-      }
-
-      if (response.success) {
-        let returnData;
-        if (isFolder) {
-          returnData = response.data as CreateFolderResponseType;
-        } else {
-          returnData = response.data as CreateChecklistResponseType;
-        }
-
-        const newItem: TreeDataProps = {
-          id: `${isFolder ? 1 : 2}-${returnData.id}`,
-          parent: node.id,
-          droppable: isFolder,
-          text: '제목 없음',
-          data: {
-            depth: getTreeItemType(node.id) + 1,
-            type: isFolder ? 1 : 2,
-            isDefaultFolderItem,
+      addItemMutate(
+        { type, parentId, name: '제목 없음' },
+        {
+          onSuccess: response => {
+            if (!isFolder) {
+              navigate(`/${response.id}`);
+            }
+            queryClient.invalidateQueries({
+              queryKey: [SidebarQueryKeys.root],
+            });
           },
-        };
-
-        updateTreeData(newItem);
-
-        if (!isFolder) {
-          navigate(`/${returnData.id}`);
-        }
-      } else {
-        alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결
-      }
+          onError: () => alert('오류가 발생했습니다.'),
+        },
+      );
     },
-    [treeData],
+    [],
   );
 
   const handleEditItem = useCallback(
     (nodeId: string, isEditing: boolean, itemName?: string) => {
-      const newTreeData: Array<TreeDataProps> = treeData.map(data => {
-        if (data.id === nodeId) {
-          return {
-            ...data,
-            text: itemName || data.text,
-            data: {
-              ...data.data,
-              isEditing,
-            },
-          } as TreeDataProps;
-        }
-        return data as TreeDataProps;
-      });
-      setTreeData(newTreeData);
+      // TODO: 하던중
+      console.log(
+        'nodeId',
+        nodeId,
+        'isEditing',
+        isEditing,
+        'itemName',
+        itemName,
+      );
+
+      const itemId = getTreeItemId(nodeId);
+      const itemType = getTreeItemType(nodeId) === 2 ? 'checklist' : 'folder';
+
+      queryClient.setQueryData(
+        [SidebarQueryKeys.root, SidebarQueryKeys.sidebar],
+        (prevData: SidebarApiResponseType) => {
+          if (!prevData) return prevData;
+
+          const newWorkspaces = prevData.workspaces.map(workspace => {
+            let workspaceUpdated = false;
+
+            const newDefaultFolder = {
+              ...workspace.defaultFolder,
+              checklists: workspace.defaultFolder.checklists.map(checklist => {
+                if (itemType === 'checklist' && checklist.id === itemId) {
+                  workspaceUpdated = true;
+                  return {
+                    ...checklist,
+                    isEditing,
+                    title: itemName ?? checklist.title,
+                  };
+                }
+                return checklist;
+              }),
+            };
+
+            const newFolders = workspace.folders.map(folder => {
+              let folderUpdated = false;
+              const newChecklists = folder.checklists.map(checklist => {
+                if (itemType === 'checklist' && checklist.id === itemId) {
+                  folderUpdated = true;
+                  return {
+                    ...checklist,
+                    isEditing,
+                    title: itemName ?? checklist.title,
+                  };
+                }
+                return checklist;
+              });
+
+              if (
+                folderUpdated ||
+                (itemType === 'folder' && folder.id === itemId)
+              ) {
+                workspaceUpdated = true;
+                return {
+                  ...folder,
+                  isEditing:
+                    itemType === 'folder' && folder.id === itemId
+                      ? isEditing
+                      : folder.isEditing,
+                  name:
+                    itemType === 'folder' && folder.id === itemId
+                      ? (itemName ?? folder.name)
+                      : folder.name,
+                  checklists: newChecklists,
+                };
+              }
+              return folder;
+            });
+
+            if (workspaceUpdated) {
+              return {
+                ...workspace,
+                defaultFolder: newDefaultFolder,
+                folders: newFolders,
+              };
+            }
+            return workspace;
+          });
+
+          const newData = {
+            ...prevData,
+            workspaces: newWorkspaces,
+          };
+          return newData;
+        },
+      );
     },
-    [treeData],
+    [],
   );
 
-  const handleDeleteItem = useCallback(
-    async (nodeId: string) => {
-      const newTreeData = treeData.filter(data => data.id !== nodeId);
-      setTreeData(newTreeData);
-
-      if (selectedNodeId === nodeId) {
-        setSelectedNodeId(undefined);
-      }
-    },
-    [treeData],
-  );
+  const handleDeleteItem = useCallback((nodeId: string) => {
+    if (selectedNodeId === nodeId) {
+      setSelectedNodeId(undefined);
+    }
+  }, []);
 
   const handleDefaultOpen = useCallback(
     (newData: Array<NodeModel<TreeDataDetailProps>>) => {
@@ -150,20 +186,6 @@ export const TreeMenu = memo(() => {
     [treeData, checklistId],
   );
 
-  const handleTreeData = useCallback(async () => {
-    const response = await getSidebarTree();
-    if (response.success) {
-      const initTreeData = formatTreeData(response as TreeApiResponseType);
-      setTreeData(initTreeData);
-    } else {
-      alert('오류가 발생했습니다.'); // TODO: 이후 삭제, 오류처리 연결, 아래 로직 success로 이동
-    }
-  }, []);
-
-  useEffect(() => {
-    handleTreeData();
-  }, []);
-
   useEffect(() => {
     if (treeData && checklistId) {
       handleDefaultOpen(treeData);
@@ -171,10 +193,14 @@ export const TreeMenu = memo(() => {
     }
   }, [treeData, checklistId]);
 
+  useEffect(() => {
+    console.log('treeData updated', treeData);
+  }, [treeData]);
+
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
       <Tree
-        tree={treeData}
+        tree={treeData ?? []}
         rootId={'root'}
         render={(node, { depth, isOpen, onToggle }) =>
           node.data?.isDefaultFolder ? (

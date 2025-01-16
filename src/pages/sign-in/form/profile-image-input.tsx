@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { Avatar, Button } from '@/components/ui';
-import { BOTTTS_AVATAR_NAMES } from '@/constants';
+import { BOTTTS_AVATAR_NAMES, BOTTTS_AVATAR_URL_PREFIX } from '@/constants';
 import { ProfileModal } from './profile-modal';
 import { useModalStore } from '@/stores';
 
@@ -19,7 +19,7 @@ export const ProfileImageInput = memo(
       const profileNumber = Math.floor(
         Math.random() * BOTTTS_AVATAR_NAMES.length,
       );
-      const avatarUrl = `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${BOTTTS_AVATAR_NAMES[profileNumber]}`;
+      const avatarUrl = `${BOTTTS_AVATAR_URL_PREFIX}${BOTTTS_AVATAR_NAMES[profileNumber]}`;
       setImage?.(avatarUrl);
       setImageUrl(avatarUrl);
     }, [setImage]);

@@ -1,7 +1,8 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
-import { patchChecklist, patchFolder } from '@/api';
+import { SidebarQueryKeys, useEditSidebarItemMutation } from '@/api';
 
 export type TreeItemEditingProps = {
   node: TreeDataProps;
@@ -14,8 +15,10 @@ export const TreeItemEditing = ({
   depth,
   onEndEdit,
 }: TreeItemEditingProps) => {
-  const ref = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const { mutate } = useEditSidebarItemMutation();
   const [itemName, setItemName] = useState<string>(node.text);
+  const ref = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -44,8 +47,6 @@ export const TreeItemEditing = ({
   };
 
   const handleEndEdit = async () => {
-    let response;
-
     const nodeType = getTreeItemType(node.id);
     const id = getTreeItemId(node.id);
     const name = ref.current?.value?.trim();
@@ -55,17 +56,16 @@ export const TreeItemEditing = ({
       return;
     }
 
-    if (nodeType === 2) {
-      response = await patchChecklist(id, name);
-    } else if (nodeType === 1) {
-      response = await patchFolder(id, name);
-    }
-
-    if (response?.success) {
-      onEndEdit(name);
-    } else {
-      onEndEdit();
-    }
+    mutate(
+      { id, name, type: nodeType === 2 ? 'checklist' : 'folder' },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [SidebarQueryKeys.root] });
+          onEndEdit(name);
+        },
+        onError: () => onEndEdit(),
+      },
+    );
   };
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosInstance from './axios-instance';
 
-type ApiResponse<T = unknown> = {
+export type ApiResponse<T = unknown> = {
   success: boolean;
   data?: T;
   status: number;

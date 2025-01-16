@@ -1,26 +1,32 @@
 import apiRequest from '../api';
+import {
+  DeleteSidebarItemPayload,
+  PatchSidebarItemPayload,
+  PostSidebarItemPayload,
+  PostSidebarItemResponse,
+} from '../models';
 
-export type CreateFolderResponseType = {
-  id: number;
-};
-
-export const postFolder = async (workspaceId: number, folderName: string) => {
-  return apiRequest('/folders', {
+export const postFolder = async ({
+  parentId,
+  name,
+}: PostSidebarItemPayload) => {
+  const response = await apiRequest('/folders', {
     method: 'POST',
-    data: { name: folderName, workspaceId },
+    data: { name, workspaceId: parentId },
   });
+  return response.data as PostSidebarItemResponse;
 };
 
-export const patchFolder = async (folderId: number, folderName: string) => {
-  return apiRequest(`/folders/${folderId}`, {
+export const patchFolder = async ({ id, name }: PatchSidebarItemPayload) => {
+  return apiRequest(`/folders/${id}`, {
     method: 'PATCH',
-    data: { name: folderName },
+    data: { name },
   });
 };
 
 // TODO: api 아직 없음
-export const deleteFolder = async (folderId: number) => {
-  return apiRequest(`/folders/${folderId}`, {
+export const deleteFolder = async ({ id }: DeleteSidebarItemPayload) => {
+  return apiRequest(`/folders/${id}`, {
     method: 'DELETE',
   });
 };

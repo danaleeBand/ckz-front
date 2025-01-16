@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useChecklistStore } from '@/stores';
-import { formatTreeData, getTreeItemId } from '@/utils';
-import { getSidebarTree, TreeApiResponseType } from '@/api';
+import { getTreeItemId } from '@/utils';
+import { useSidebarQuery } from '@/api';
 
 export const ChecklistRoute = () => {
   const navigate = useNavigate();
   const { lastViewedChecklistId } = useChecklistStore();
+  const { data: initTreeData, isPending, isSuccess } = useSidebarQuery(true);
 
   const getLastViewedChecklistId = async () => {
-    const response = await getSidebarTree();
-
-    if (response.success) {
+    if (isSuccess) {
       let checkListId;
-      const initTreeData = formatTreeData(response as TreeApiResponseType);
       const checklists = initTreeData
         .filter(item => item.data.type === 2)
         .map(item => getTreeItemId(item.id));
@@ -30,8 +28,9 @@ export const ChecklistRoute = () => {
   };
 
   useEffect(() => {
+    if (isPending) return;
     getLastViewedChecklistId();
-  }, []);
+  }, [isSuccess, isPending]);
 
   return null;
 };

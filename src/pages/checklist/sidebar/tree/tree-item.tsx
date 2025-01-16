@@ -10,10 +10,11 @@ import {
   faPlus,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { useChecklistStore } from '@/stores';
-import { deleteChecklist, deleteFolder } from '@/api';
+import { SidebarQueryKeys, useDeleteSidebarItemMutation } from '@/api';
 
 export type TreeItemProps = {
   node: TreeDataProps;
@@ -37,9 +38,13 @@ export const TreeItem = memo(
     onEditItem,
     onDeleteItem,
   }: TreeItemProps) => {
-    const { setLastViewedChecklistId } = useChecklistStore();
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const dragOverProps = useDragOver(node.id, isOpen, onToggle);
+
+    const { setLastViewedChecklistId } = useChecklistStore();
+    const { mutate: deleteMutation } = useDeleteSidebarItemMutation();
+
     const [isHovering, setIsHovering] = useState(false);
 
     const handleOnClick = useCallback(
@@ -56,27 +61,24 @@ export const TreeItem = memo(
     );
 
     const handleDeleteItem = useCallback(async () => {
-      // TODO: alert, confirm 컴포넌트 추가 예정
       const isDeleteConfirmed = window.confirm('정말 삭제하시겠습니까?');
-
       if (!isDeleteConfirmed) {
         return;
       }
-      let response;
       const type = getTreeItemType(node.id as string);
       const nodeId = getTreeItemId(node.id as string);
-
-      if (type === 2) {
-        response = await deleteChecklist(nodeId);
-      } else if (type === 1) {
-        // response = await deleteFolder(nodeId); // TODO: api 추가 예정
-      }
-
-      if (response?.success) {
-        onDeleteItem?.();
-      } else {
-        alert('실패');
-      }
+      deleteMutation(
+        { id: nodeId, type: type === 2 ? 'checklist' : 'folder' },
+        {
+          onSuccess: () => {
+            onDeleteItem?.();
+            queryClient.invalidateQueries({
+              queryKey: [SidebarQueryKeys.root],
+            });
+          },
+          onError: () => alert('실패'),
+        },
+      );
     }, [node.id]);
 
     const getAddItemButton = useCallback((type: 'folder' | 'checklist') => {
