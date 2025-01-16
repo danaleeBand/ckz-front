@@ -9,6 +9,7 @@ import {
   DragLayerMonitorProps,
 } from '@minoru/react-dnd-treeview';
 import { useQueryClient } from '@tanstack/react-query';
+import { produce } from 'immer';
 import { SidebarItemType, TreeDataDetailProps, TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType, isDroppableTreeItem } from '@/utils';
 import { TreeItem } from './tree-item';
@@ -93,73 +94,36 @@ export const TreeMenu = memo(() => {
         (prevData: SidebarApiResponseType) => {
           if (!prevData) return prevData;
 
-          const newWorkspaces = prevData.workspaces.map(workspace => {
-            let workspaceUpdated = false;
+          const newData = produce(prevData, draft => {
+            draft.workspaces.forEach(workspace => {
+              if (itemType === 'checklist') {
+                workspace.defaultFolder.checklists.forEach(checklist => {
+                  if (checklist.id === itemId) {
+                    checklist.isEditing = isEditing;
+                    checklist.title = itemName ?? checklist.title;
+                  }
+                });
 
-            const newDefaultFolder = {
-              ...workspace.defaultFolder,
-              checklists: workspace.defaultFolder.checklists.map(checklist => {
-                if (itemType === 'checklist' && checklist.id === itemId) {
-                  workspaceUpdated = true;
-                  return {
-                    ...checklist,
-                    isEditing,
-                    title: itemName ?? checklist.title,
-                  };
-                }
-                return checklist;
-              }),
-            };
-
-            const newFolders = workspace.folders.map(folder => {
-              let folderUpdated = false;
-              const newChecklists = folder.checklists.map(checklist => {
-                if (itemType === 'checklist' && checklist.id === itemId) {
-                  folderUpdated = true;
-                  return {
-                    ...checklist,
-                    isEditing,
-                    title: itemName ?? checklist.title,
-                  };
-                }
-                return checklist;
-              });
-
-              if (
-                folderUpdated ||
-                (itemType === 'folder' && folder.id === itemId)
-              ) {
-                workspaceUpdated = true;
-                return {
-                  ...folder,
-                  isEditing:
-                    itemType === 'folder' && folder.id === itemId
-                      ? isEditing
-                      : folder.isEditing,
-                  name:
-                    itemType === 'folder' && folder.id === itemId
-                      ? (itemName ?? folder.name)
-                      : folder.name,
-                  checklists: newChecklists,
-                };
+                workspace.folders.forEach(folder => {
+                  folder.checklists.forEach(checklist => {
+                    if (checklist.id === itemId) {
+                      checklist.isEditing = isEditing;
+                      checklist.title = itemName ?? checklist.title;
+                    }
+                  });
+                });
               }
-              return folder;
+
+              if (itemType === 'folder') {
+                workspace.folders.forEach(folder => {
+                  if (folder.id === itemId) {
+                    folder.isEditing = isEditing;
+                    folder.name = itemName ?? folder.name;
+                  }
+                });
+              }
             });
-
-            if (workspaceUpdated) {
-              return {
-                ...workspace,
-                defaultFolder: newDefaultFolder,
-                folders: newFolders,
-              };
-            }
-            return workspace;
           });
-
-          const newData = {
-            ...prevData,
-            workspaces: newWorkspaces,
-          };
           return newData;
         },
       );
