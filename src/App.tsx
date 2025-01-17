@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Modal from 'react-modal';
 import './App.css';
 import { Checklist, LoginPage, SignInPage } from '@/pages';
 import {
@@ -13,8 +12,6 @@ import { useThemeStore } from '@/stores';
 import { applyTheme } from '@/utils';
 
 function App() {
-  Modal.setAppElement('#root');
-
   const { theme } = useThemeStore();
   useEffect(() => {
     applyTheme(theme);
