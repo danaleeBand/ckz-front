@@ -1,59 +1,55 @@
 import { memo } from 'react';
-import ReactModal from 'react-modal';
 import { BOTTTS_AVATAR_NAMES } from '@/constants';
-import { Avatar } from '@/components/ui';
-
-const customModalStyles: ReactModal.Styles = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    width: '100%',
-    height: '100%',
-    zIndex: 10,
-    position: 'fixed',
-    top: 0,
-    left: 0,
-  },
-  content: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    WebkitOverflowScrolling: 'touch',
-  },
-};
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui';
 
 export type ProfileModalProps = {
   isOpen: boolean;
-  toggleModal: () => void;
+  onOpenChange: () => void;
   onAvatarSelected: (url: string) => void;
 };
 
-export const ProfileModal = memo(
-  ({ toggleModal, isOpen, onAvatarSelected }: ProfileModalProps) => {
+export const ProfileModalButton = memo(
+  ({ isOpen, onOpenChange, onAvatarSelected }: ProfileModalProps) => {
     const handleOnclick = (url: string) => {
       onAvatarSelected?.(url);
     };
 
     return (
-      <ReactModal
-        isOpen={isOpen}
-        shouldCloseOnOverlayClick
-        onRequestClose={() => toggleModal()}
-        style={customModalStyles}
-        className={`flex flex-wrap justify-center items-center w-44 p-2 gap-2
-          bg-bg-basic dark:bg-dark-bg-basic rounded-md shadow-md`}
-      >
-        {BOTTTS_AVATAR_NAMES.map(name => {
-          return (
-            <Avatar
-              key={name}
-              imageUrl={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${name}`}
-              className='w-8 h-8 hover:shadow-md hover:brightness-75'
-              onClick={handleOnclick}
-            />
-          );
-        })}
-      </ReactModal>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogTrigger>
+          <Button
+            type='outlined'
+            labelText='기본 프로필'
+            size='small'
+            className=''
+          />
+        </DialogTrigger>
+        <DialogContent className='sm:max-w-md'>
+          <DialogHeader>
+            <DialogTitle>기본 프로필 선택</DialogTitle>
+          </DialogHeader>
+          <div className='flex flex-wrap justify-center items-center gap-2'>
+            {BOTTTS_AVATAR_NAMES.map(name => {
+              return (
+                <Avatar
+                  key={name}
+                  imageUrl={`https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${name}`}
+                  className='w-14 h-14 hover:shadow-md hover:brightness-75'
+                  onClick={handleOnclick}
+                />
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
     );
   },
 );

@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { Avatar, Button } from '@/components/ui';
 import { BOTTTS_AVATAR_NAMES, BOTTTS_AVATAR_URL_PREFIX } from '@/constants';
-import { ProfileModal } from './profile-modal';
+import { ProfileModalButton } from './profile-modal';
 import { useModalStore } from '@/stores';
 
 export type ProfileImageInputProps = {
@@ -43,9 +43,6 @@ export const ProfileImageInput = memo(
     };
 
     // '기본 프로필' 기능
-    const handleModalButtonOnClick = () => {
-      toggleModal();
-    };
     const handleAvatarChanged = (url: string) => {
       setImage?.(url);
       setImageUrl(url);
@@ -62,12 +59,10 @@ export const ProfileImageInput = memo(
             size='small'
             onClick={handleSelectFileButtonOnClick}
           />
-          <Button
-            type='outlined'
-            labelText='기본 프로필'
-            size='small'
-            className=''
-            onClick={handleModalButtonOnClick}
+          <ProfileModalButton
+            isOpen={isModalOpen}
+            onOpenChange={toggleModal}
+            onAvatarSelected={handleAvatarChanged}
           />
         </div>
         <input
@@ -77,13 +72,6 @@ export const ProfileImageInput = memo(
           onChange={handleFileChange}
           hidden
         />
-        {isModalOpen && (
-          <ProfileModal
-            toggleModal={toggleModal}
-            isOpen={isModalOpen}
-            onAvatarSelected={handleAvatarChanged}
-          />
-        )}
       </div>
     );
   },

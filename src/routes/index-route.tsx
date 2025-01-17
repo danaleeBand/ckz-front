@@ -28,7 +28,7 @@ export const IndexRoute = () => {
       }
     } else {
       alert('사용자 정보를 가져오는데 실패했습니다.');
-      logout();
+      await logout();
       navigate('/');
     }
   };

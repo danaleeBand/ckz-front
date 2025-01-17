@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import react from "@vitejs/plugin-react";
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [svgr()],
+  plugins: [react(), svgr()],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'), // 프로젝트 루트의 src 디렉토리를 가리키는 별칭 설정
