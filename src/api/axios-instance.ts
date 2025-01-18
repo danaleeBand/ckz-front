@@ -11,12 +11,10 @@ let isRefreshing = false;
 
 const addToFailedQueue = () =>
   new Promise((resolve, reject) => {
-    console.log('addToFailedQueue');
     failedQueue.push({ resolve, reject });
   });
 
 const processFailedQueue = (error: unknown, token?: string) => {
-  console.log('processFailedQueue');
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) reject(error);
     else resolve(token);
@@ -47,15 +45,11 @@ axiosInstance.interceptors.response.use(
   response => {
     // TODO: 오류 페이지 interceptor 추가
     response.data = convertKeysToCamel(response.data);
-    console.log('interceptor response', response);
     return response;
   },
   async error => {
-    console.log('error', error);
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest.retry) {
-      console.error('Access token expired');
-
       originalRequest.retry = true;
       if (isRefreshing) {
         return addToFailedQueue().then(token => {
@@ -74,7 +68,7 @@ axiosInstance.interceptors.response.use(
         .catch(err => {
           processFailedQueue(err);
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          window.location.href = '/'; // TODO: history 사용하도록 수정
+          window.location.href = '/';
           return Promise.reject(err);
         })
         .finally(() => {
@@ -86,7 +80,6 @@ axiosInstance.interceptors.response.use(
 );
 
 const refreshAccessToken = async () => {
-  console.log('refreshAccessToken');
   const response = await axios.get(
     `${import.meta.env.VITE_SERVER_BASE_URL}/auth/refresh-token`,
     { withCredentials: true },

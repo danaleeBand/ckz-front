@@ -23,14 +23,13 @@ const apiRequest = async <T = unknown>(
       url,
       ...options,
     });
-    console.log('response', response);
     return {
       success: true,
       status: response.status,
       data: response.data,
     };
   } catch (error) {
-    console.error('API Request Error:', error);
+    console.error('🚫🚫🚫 API Request Error:', error);
     if (axios.isAxiosError(error)) {
       return {
         success: false,
