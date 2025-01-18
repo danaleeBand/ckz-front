@@ -1,15 +1,16 @@
 import apiRequest from '../api';
 import {
   AddChecklistItemRequest,
-  ChecklistItem,
+  ChecklistItemType,
   DeleteChecklistItemRequest,
+  UpdateChecklistItemRequest,
 } from '../models';
 
 export const getChecklistItems = async (checklistId: number) => {
   const response = await apiRequest(`/checklists/${checklistId}/items`, {
     method: 'GET',
   });
-  return response.data as Array<ChecklistItem>;
+  return response.data as Array<ChecklistItemType>;
 };
 
 export const postChecklistItem = async ({
@@ -26,7 +27,7 @@ export const patchChecklistItem = async ({
   checklistId,
   checklistItemId,
   ...rest
-}: ChecklistItem) => {
+}: UpdateChecklistItemRequest) => {
   return apiRequest(`/checklists/${checklistId}/items/${checklistItemId}`, {
     method: 'PATCH',
     data: { ...rest },

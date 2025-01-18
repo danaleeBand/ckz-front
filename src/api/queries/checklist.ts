@@ -1,9 +1,15 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
+  deleteChecklistItem,
   getChecklistItems,
+  patchChecklistItem,
   postChecklistItem,
 } from '../services/checklist-item';
-import { AddChecklistItemRequest, ChecklistItem } from '../models';
+import {
+  AddChecklistItemRequest,
+  DeleteChecklistItemRequest,
+  UpdateChecklistItemRequest,
+} from '../models';
 
 export const ChecklistQueryKeys = {
   root: 'checklist',
@@ -28,14 +34,23 @@ export const useGetChecklistItemsQuery = (checklistId: number) => {
 export const useAddChecklistItemMutation = () => {
   return useMutation({
     mutationKey: [ChecklistQueryKeys.root, 'add'],
-    mutationFn: (payload: ChecklistItem) => postChecklistItem({ ...payload }),
+    mutationFn: (payload: AddChecklistItemRequest) =>
+      postChecklistItem({ ...payload }),
   });
 };
 
 export const useUpdateChecklistItemMutation = () => {
   return useMutation({
     mutationKey: [ChecklistQueryKeys.root, 'patch'],
-    mutationFn: (payload: AddChecklistItemRequest) =>
-      postChecklistItem({ ...payload }),
+    mutationFn: (payload: UpdateChecklistItemRequest) =>
+      patchChecklistItem({ ...payload }),
+  });
+};
+
+export const useDeleteChecklistItemMutation = () => {
+  return useMutation({
+    mutationKey: [ChecklistQueryKeys.root, 'delete'],
+    mutationFn: (payload: DeleteChecklistItemRequest) =>
+      deleteChecklistItem({ ...payload }),
   });
 };

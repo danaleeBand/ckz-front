@@ -12,11 +12,7 @@ export const IndexRoute = () => {
   const getUserInfo = async () => {
     try {
       const userApiResponse = await getUser();
-      const {
-        name,
-        profile_image_url: imageUrl,
-        is_checky: isChecky,
-      } = userApiResponse;
+      const { name, profileImageUrl: imageUrl, isChecky } = userApiResponse;
 
       setUserName(name);
       setProfileImageUrl(imageUrl);

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores';
+import { convertKeysToCamel } from '@/utils';
 
 type FailedQueuePromise = {
   resolve: (value?: string | PromiseLike<string>) => void;
@@ -45,6 +46,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => {
     // TODO: 오류 페이지 interceptor 추가
+    response.data = convertKeysToCamel(response.data);
     console.log('interceptor response', response);
     return response;
   },
