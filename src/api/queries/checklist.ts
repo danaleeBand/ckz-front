@@ -10,12 +10,14 @@ import {
   DeleteChecklistItemRequest,
   UpdateChecklistItemRequest,
 } from '../models';
+import { getChecklistDetail } from '../services';
 
 export const ChecklistQueryKeys = {
   root: 'checklist',
-  get: 'get-checklist-items',
+  getItem: 'get-checklist-items',
+  getDetail: 'get-checklist-detail',
   add: 'add-checklist-item',
-  patch: 'patch-checklist-item',
+  update: 'patch-checklist-item',
   delete: 'delete-checklist-item',
 };
 
@@ -23,7 +25,7 @@ export const useGetChecklistItemsQuery = (checklistId: number) => {
   return useQuery({
     queryKey: [
       ChecklistQueryKeys.root,
-      ChecklistQueryKeys.get,
+      ChecklistQueryKeys.getItem,
       checklistId ?? -1,
     ],
     queryFn: () => getChecklistItems(checklistId),
@@ -52,5 +54,16 @@ export const useDeleteChecklistItemMutation = () => {
     mutationKey: [ChecklistQueryKeys.root, 'delete'],
     mutationFn: (payload: DeleteChecklistItemRequest) =>
       deleteChecklistItem({ ...payload }),
+  });
+};
+
+export const useGetChecklistDetailQuery = (checklistId: number) => {
+  return useQuery({
+    queryKey: [
+      ChecklistQueryKeys.root,
+      ChecklistQueryKeys.getDetail,
+      checklistId ?? -1,
+    ],
+    queryFn: () => getChecklistDetail({ id: checklistId }),
   });
 };

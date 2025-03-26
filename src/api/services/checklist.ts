@@ -1,6 +1,8 @@
 import apiRequest from '../api';
 import {
   DeleteSidebarItemPayload,
+  GetChecklistDetailPayload,
+  GetChecklistDetailResponse,
   PatchSidebarItemPayload,
   PostSidebarItemPayload,
   PostSidebarItemResponse,
@@ -18,14 +20,21 @@ export const postChecklist = async ({
 };
 
 export const patchChecklist = async ({ id, name }: PatchSidebarItemPayload) => {
-  return apiRequest(`/checklists/${id}`, {
+  return await apiRequest(`/checklists/${id}`, {
     method: 'PATCH',
     data: { title: name },
   });
 };
 
 export const deleteChecklist = async ({ id }: DeleteSidebarItemPayload) => {
-  return apiRequest(`/checklists/${id}`, {
+  return await apiRequest(`/checklists/${id}`, {
     method: 'DELETE',
   });
+};
+
+export const getChecklistDetail = async ({ id }: GetChecklistDetailPayload) => {
+  const response = await apiRequest(`/checklists/${id}`, {
+    method: 'GET',
+  });
+  return response.data as GetChecklistDetailResponse;
 };

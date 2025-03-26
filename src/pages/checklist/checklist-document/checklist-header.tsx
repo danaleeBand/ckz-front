@@ -1,18 +1,23 @@
 import { ChevronRightIcon, EllipsisIcon } from 'lucide-react';
 import { getRelativeTimeString } from '@/utils';
 
-export type ChecklistHeaderProps = { hi: 'hid' };
+export type ChecklistHeaderProps = {
+  title: string;
+  workspaceName: string;
+  folderName: string;
+  isDefault: boolean;
+  lastEdited: Date;
+  lastEditedBy: string | null;
+};
 
-export const ChecklistHeader = () => {
-  // TODO: props로 받아오기
-  const title = '제목없음';
-  const workspaceName = '기본 워크스페이스';
-  const folderName = '기본 폴더';
-  const isDefault = true;
-  // const lastEdited = time('2025-03-26 12:00:00');
-  const lastEdited = new Date('2025-03-26 17:00:00');
-  const lastEditedBy = '홍길동';
-
+export const ChecklistHeader = ({
+  title,
+  workspaceName,
+  folderName,
+  isDefault,
+  lastEdited,
+  lastEditedBy,
+}: ChecklistHeaderProps) => {
   return (
     <div className='h-12 pt-5 pl-10 pr-16 text-xs'>
       <div className='flex justify-between items-center'>
@@ -20,7 +25,7 @@ export const ChecklistHeader = () => {
         <div className='flex justify-center items-center gap-0.5'>
           <div className=''>{workspaceName}</div>
           <ChevronRightIcon className='w-4 h-4' />
-          {isDefault && (
+          {!isDefault && (
             <div className='flex justify-center items-center gap-0.5'>
               <div className=''>{folderName}</div>
               <ChevronRightIcon className='w-4 h-4' />
