@@ -1,10 +1,5 @@
+import { BanIcon, CircleCheckIcon, TriangleAlertIcon } from 'lucide-react';
 import { useMemo, useState, forwardRef } from 'react';
-import {
-  faCheckCircle,
-  faExclamationCircle,
-  faExclamationTriangle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export type TextFieldStatus = 'error' | 'warning' | 'confirm';
 export type TextFieldType = 'text' | 'number' | 'password';
@@ -76,27 +71,16 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       absolute right-2 top-2
     `;
       if (validationResult === 'error') {
-        return (
-          <FontAwesomeIcon
-            icon={faExclamationCircle}
-            className={`${statusIconStyle} text-error`}
-          />
-        );
+        return <BanIcon className={`${statusIconStyle} text-error`} />;
       }
       if (validationResult === 'warning') {
         return (
-          <FontAwesomeIcon
-            icon={faExclamationTriangle}
-            className={`${statusIconStyle} text-warning`}
-          />
+          <TriangleAlertIcon className={`${statusIconStyle} text-warning`} />
         );
       }
       if (validationResult === 'confirm') {
         return (
-          <FontAwesomeIcon
-            icon={faCheckCircle}
-            className={`${statusIconStyle} text-confirm`}
-          />
+          <CircleCheckIcon className={`${statusIconStyle} text-confirm`} />
         );
       }
       return <></>;

@@ -1,16 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Avatar, Dropdown, DropdownItemProps, Tooltip } from '@/components/ui';
 import { useUserStore } from '@/stores';
 import { logout } from '@/utils';
+import { SettingsIcon, UserPlusIcon } from 'lucide-react';
 
-export type SidebarHeaderProps = {
-  width: number;
-};
-
-export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
+export const SidebarHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -37,7 +32,7 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
   }, []);
 
   const actionIconStyle = `p-0.5 rounded-sm hover:bg-grey-150 cursor-pointer focus:outline-none 
-    hover:text-text-primary-dark dark:hover:text-dark-text-primary-light`;
+    hover:text-text-primary-dark dark:hover:text-dark-text-primary-light w-5 h-5`;
 
   return (
     <>
@@ -53,14 +48,12 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
           className='flex flex-row gap-1 items-center ml-auto mr-2 
             text-text-lighter dark:text-dark-text-darker text-base'
         >
-          <FontAwesomeIcon
-            icon={faUserPlus}
+          <UserPlusIcon
             data-tooltip-id='new-checklist'
             data-tooltip-content='공유 워크스페이스 추가'
             className={actionIconStyle}
           />
-          <FontAwesomeIcon
-            icon={faGear}
+          <SettingsIcon
             data-tooltip-id='setting'
             data-tooltip-content='계정 설정'
             className={actionIconStyle}

@@ -18,7 +18,7 @@ export const Sidebar = () => {
       style={{ width: `${width}px` }}
     >
       <div className='w-full h-full flex flex-col gap-1'>
-        <SidebarHeader width={width} />
+        <SidebarHeader />
         <TreeMenu />
       </div>
       <DragHandle onDrag={handleDrag} />
