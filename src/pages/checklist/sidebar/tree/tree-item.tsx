@@ -1,20 +1,19 @@
 import { memo, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NodeModel, useDragOver } from '@minoru/react-dnd-treeview';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCaretDown,
-  faCaretRight,
-  faFolderPlus,
-  faPen,
-  faPlus,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { useChecklistStore } from '@/stores';
 import { SidebarQueryKeys, useDeleteSidebarItemMutation } from '@/api';
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  FolderPlusIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from 'lucide-react';
 
 export type TreeItemProps = {
   node: TreeDataProps;
@@ -91,7 +90,11 @@ export const TreeItem = memo(
 
       return (
         <button aria-label={`${itemName} 생성`} onClick={handleAddItem}>
-          <FontAwesomeIcon icon={type === 'folder' ? faFolderPlus : faPlus} />
+          {type === 'folder' ? (
+            <FolderPlusIcon className='w-3.5 h-3.5' />
+          ) : (
+            <PlusIcon className='w-3.5 h-3.5' />
+          )}
         </button>
       );
     }, []);
@@ -122,8 +125,8 @@ export const TreeItem = memo(
             className={`w-4 h-4 flex justify-center items-center 
             text-xs text-text-light dark:text-dark-text-dark`}
           >
-            {isOpen && <FontAwesomeIcon icon={faCaretDown} />}
-            {!isOpen && <FontAwesomeIcon icon={faCaretRight} />}
+            {isOpen && <ChevronDownIcon className='w-3.5 h-3.5' />}
+            {!isOpen && <ChevronRightIcon className='w-3.5 h-3.5' />}
           </button>
         )}
         <div className='text-basic truncate w-full'>{node.text}</div>
@@ -148,7 +151,7 @@ export const TreeItem = memo(
                     onEditItem?.();
                   }}
                 >
-                  <FontAwesomeIcon icon={faPen} />
+                  <PencilIcon className='w-3.5 h-3.5' />
                 </button>
                 <button
                   aria-label='항목 삭제'
@@ -157,7 +160,7 @@ export const TreeItem = memo(
                     handleDeleteItem();
                   }}
                 >
-                  <FontAwesomeIcon icon={faTrash} />
+                  <TrashIcon className='w-3.5 h-3.5' />
                 </button>
               </>
             )}

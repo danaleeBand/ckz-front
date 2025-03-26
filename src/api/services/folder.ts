@@ -24,7 +24,6 @@ export const patchFolder = async ({ id, name }: PatchSidebarItemPayload) => {
   });
 };
 
-// TODO: api 아직 없음
 export const deleteFolder = async ({ id }: DeleteSidebarItemPayload) => {
   return apiRequest(`/folders/${id}`, {
     method: 'DELETE',

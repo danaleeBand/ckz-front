@@ -1,5 +1,14 @@
 export type UserGetResponse = {
   name: string;
-  profile_image_url: string;
-  is_checky: boolean;
+  profileImageUrl: string;
+  isChecky: boolean;
+};
+
+export type UserInfo = {
+  id: number;
+  name: string;
+  profileImageUrl: string;
+  isChecky: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };

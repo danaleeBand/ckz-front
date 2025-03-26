@@ -1,7 +1,9 @@
 import apiRequest from '../api';
+import { UserGetResponse } from '../models';
 
 export const getUser = async () => {
-  return apiRequest('/users', { method: 'GET' });
+  const response = await apiRequest('/users', { method: 'GET' });
+  return response.data as UserGetResponse;
 };
 
 export const patchUser = async (name: string, profileImageUrl: string) => {
