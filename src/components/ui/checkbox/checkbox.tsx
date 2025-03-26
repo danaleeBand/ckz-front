@@ -1,77 +1,28 @@
-import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { Check } from 'lucide-react';
 
-export type CheckboxProps = {
-  checked: boolean;
-  indeterminate?: boolean;
-  onChange?: (_: boolean) => void;
-  label?: string;
-  className?: string;
-};
+import { cn } from '@/lib/utils';
 
-export const Checkbox = ({
-  checked = false,
-  indeterminate = false,
-  onChange,
-  className,
-  label,
-}: CheckboxProps) => {
-  const checkBoxRef = useRef<HTMLInputElement>(null);
-  const [isChecked, setIsChecked] = useState<boolean>(checked);
+const Checkbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      'peer h-4 w-4 shrink-0 rounded-sm border border-gray-300 dark:border-gray-600 shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground bg-white dark:bg-gray-800',
+      className,
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator
+      className={cn('flex items-center justify-center text-current')}
+    >
+      <Check className='h-4 w-4' />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-  useEffect(() => {
-    if (checkBoxRef?.current) {
-      checkBoxRef.current.indeterminate = indeterminate;
-      checkBoxRef.current.checked = checked;
-    }
-  }, [indeterminate, checked]);
-
-  return (
-    <div className='flex gap-1 h-5 items-center'>
-      <input
-        type='checkbox'
-        ref={checkBoxRef}
-        id='custom-checkbox-input'
-        className={`
-        appearance-none shrink-0 
-        w-4 h-4 bg-bg-basic dark:bg-dark-bg-basic
-        hover:bg-bg-dark dark:hover:bg-dark-bg-light
-        rounded-sm border-border-primary border-1 border-solid
-      checked:bg-bg-primary dark:checked:bg-dark-bg-primary checked:border-0 
-      checked:hover:bg-bg-primary-light dark:checked:hover:bg-dark-bg-primary-light
-      indeterminate:bg-bg-primary dark:indeterminate:bg-dark-bg-primary indeterminate:border-0
-      indeterminate:hover:bg-bg-primary-light dark:indeterminate:hover:bg-dark-bg-primary-light
-        cursor-pointer
-        ${className}
-      `}
-        onChange={event => {
-          setIsChecked(event.target?.checked);
-          onChange?.(event.target?.checked);
-        }}
-      />
-      {isChecked && !indeterminate && (
-        <FontAwesomeIcon
-          className={`absolute w-4 h-4 text-text-inverse dark:text-dark-text-inverse 
-            pointer-events-none peer-checked:block outline-none`}
-          icon={faCheck}
-        />
-      )}
-      {indeterminate && (
-        <FontAwesomeIcon
-          className={`absolute w-4 h-4 text-text-inverse dark:text-dark-text-inverse 
-            pointer-events-none peer-checked:block outline-none`}
-          icon={faMinus}
-        />
-      )}
-      {label && (
-        <label
-          className='cursor-pointer h-5 text-text-basic dark:text-dark-text-basic text-sm align-middle'
-          htmlFor={'custom-checkbox-input'}
-        >
-          {label}
-        </label>
-      )}
-    </div>
-  );
-};
+export { Checkbox };
