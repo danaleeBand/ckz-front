@@ -14,10 +14,10 @@ export const Sidebar = () => {
   return (
     <div
       ref={ref}
-      className='flex flex-row relative bg-bg-dark dark:bg-dark-bg-light'
+      className='flex flex-row min-w-72 relative bg-bg-dark dark:bg-dark-bg-light'
       style={{ width: `${width}px` }}
     >
-      <div className='w-full h-full flex flex-col gap-1 '>
+      <div className='w-full h-full flex flex-col gap-1'>
         <SidebarHeader width={width} />
         <TreeMenu />
       </div>

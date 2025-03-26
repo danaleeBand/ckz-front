@@ -42,16 +42,16 @@ export const SidebarHeader = ({ width }: SidebarHeaderProps) => {
   return (
     <>
       <div
-        className='flex flex-row items-center py-1 px-1 mx-1 mt-2 mb-1.5 gap-2
+        className='h-8 flex flex-row items-center py-1 px-1 mx-1 mt-2 mb-1.5 gap-2
         hover:bg-bg-darker dark:hover:bg-bg-darker rounded-md'
       >
         <Avatar imageUrl={profileImageUrl ?? ''} className='w-6 h-6' />
-        <p className='font-bold text-sm text-text-light dark:text-dark-text-dark'>
-          {width >= 250 && `${name}의 `}체크리스트
+        <p className='font-bold text-base text-text-light dark:text-dark-text-dark'>
+          {name}의 체크리스트
         </p>
         <div
           className='flex flex-row gap-1 items-center ml-auto mr-2 
-            text-text-lighter dark:text-dark-text-darker text-sm'
+            text-text-lighter dark:text-dark-text-darker text-base'
         >
           <FontAwesomeIcon
             icon={faUserPlus}
