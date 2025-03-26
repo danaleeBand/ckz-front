@@ -69,6 +69,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       const statusIconStyle = `
       ${isFocus ? 'visible' : 'invisible'}
       absolute right-2 top-2
+      w-4 h-4
     `;
       if (validationResult === 'error') {
         return <BanIcon className={`${statusIconStyle} text-error`} />;
