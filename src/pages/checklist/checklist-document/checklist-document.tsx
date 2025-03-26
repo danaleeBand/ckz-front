@@ -1,16 +1,21 @@
 import { useParams } from 'react-router-dom';
 import { useGetChecklistItemsQuery } from '@/api/queries/checklist';
 import { ChecklistItem } from './checklist-item';
+import { ChecklistHeader } from './checklist-header';
 
 export const ChecklistDocument = () => {
   // const { checklistId } = useParams().checklistId;
 
-  const { data: checklistItems } = useGetChecklistItemsQuery(1);
-  const title = '제목없음'; // TODO: 백엔드에서 받아오기
+  const { data: checklistItems } = useGetChecklistItemsQuery(42);
+  // TODO: 백엔드에서 받아오기
+  const title = '제목없음';
+  const workspaceName = '기본 워크스페이스';
+  const folderName = '기본 폴더';
+  const isDefault = true;
 
   return (
     <div className='flex flex-col w-full h-full'>
-      <div className='h-12 pt-5 bg-bg-inverse text-text-inverse'>헤더</div>
+      <ChecklistHeader />
 
       <div className='flex flex-1 pl-40 pr-48'>
         <div className='flex flex-col flex-1 gap-2 pt-20'>
