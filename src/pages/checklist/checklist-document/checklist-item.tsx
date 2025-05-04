@@ -37,8 +37,8 @@ export const ChecklistItem = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 옵션 메뉴 버튼 영역 */}
-      <div className='flex h-10 w-14 pr-2 justify-end items-center self-start'>
+      {/* 옵션 메뉴 버튼 영역 - TODO: 이후 순서 변경 기능 추가 시 사용 */}
+      {/* <div className='flex h-10 w-14 pr-2 justify-end items-center self-start'>
         {isHovered && (
           <div className='flex justify-center items-center'>
             <button className='p-1 rounded-full hover:bg-grey-50 cursor-pointer focus:outline-none'>
@@ -49,7 +49,7 @@ export const ChecklistItem = ({
             </button>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* 체크리스트 아이템 영역 */}
       <div
