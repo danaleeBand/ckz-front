@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { TreeDataProps } from '@/types';
 import { getTreeItemId, getTreeItemType } from '@/utils';
 import { SidebarQueryKeys, useEditSidebarItemMutation } from '@/api';
+import { ChecklistQueryKeys } from '@/api/queries/checklist';
 
 export type TreeItemEditingProps = {
   node: TreeDataProps;
@@ -61,6 +62,9 @@ export const TreeItemEditing = ({
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [SidebarQueryKeys.root] });
+          queryClient.invalidateQueries({
+            queryKey: [ChecklistQueryKeys.root],
+          });
           onEndEdit(name);
         },
         onError: () => onEndEdit(),
