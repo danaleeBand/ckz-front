@@ -6,6 +6,6 @@ export type AuthStore = {
 };
 
 export const useAuthStore = create<AuthStore>(set => ({
-  accessToken: localStorage.getItem('accessToken') || null,
+  accessToken: null,
   setAccessToken: (accessToken: string | null) => set({ accessToken }),
 }));

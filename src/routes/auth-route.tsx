@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/stores';
-import { logout } from '@/utils';
+import { resetUserInfo } from '@/utils';
 import { AuthTokenGetResponse, getAuthToken } from '@/api';
 
 export const AuthRoute = () => {
@@ -22,12 +22,13 @@ export const AuthRoute = () => {
 
     // 소셜 인증 code로 jwt 토큰 가져오기
     const tokenResponse = await getAuthToken(provider, code);
+    console.log(tokenResponse); // TODO: 삭제
     if (tokenResponse.success) {
       const { accessToken } = tokenResponse.data as AuthTokenGetResponse;
       setAccessToken(accessToken);
     } else {
       alert('로그인에 실패했습니다.');
-      await logout();
+      resetUserInfo();
     }
     navigate('/');
   };
