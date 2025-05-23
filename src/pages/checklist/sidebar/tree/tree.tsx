@@ -43,7 +43,8 @@ export const TreeMenu = memo(() => {
 
   const handleDrop = useCallback(
     (newTreeData: Array<NodeModel<TreeDataDetailProps>>) => {
-      // TODO: 순서 바꾸기 api 추가
+      // TODO: 순서 바꾸기 api
+      console.log('handleDrop', newTreeData);
     },
     [],
   );

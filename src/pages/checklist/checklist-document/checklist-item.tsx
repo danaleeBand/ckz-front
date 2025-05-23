@@ -18,6 +18,7 @@ export const ChecklistItem = ({
 
   const handleCheckItem = useCallback((checked: boolean) => {
     // api 호출
+    console.log('handleCheckItem', checked);
   }, []);
 
   const checklistItemStyle = `flex flex-1 flex-row pt-1.5 pb-1.5 pl-5 pr-3 gap-4 border-none ${
