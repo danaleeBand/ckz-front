@@ -1,5 +1,8 @@
 # Checkuiz❓❕ front
 
+배포경로
+https://ckz-front.vercel.app/login
+
 ---
 
 ## 프로젝트 초기 실행
