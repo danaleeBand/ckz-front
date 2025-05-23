@@ -6,17 +6,17 @@ jobs:
   sync-to-fork:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source repo
+      - name: Checkout with PAT
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.FORK_PAT }}
 
-      - name: Echo PAT Length
-        run: echo "${{ secrets.FORK_PAT }}" | wc -c
-
-      - name: Add fork remote with PAT
+      - name: Set remote and force push to fork
         env:
           PAT: ${{ secrets.FORK_PAT }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          git remote remove origin
           git remote add fork https://x-access-token:${PAT}@github.com/gardenee/ckz-front.git
           git push fork main --force
