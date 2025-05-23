@@ -9,15 +9,11 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
 
-      - name: Show token length (debug)
-        run: |
-          echo "Token length: ${#FORK_PAT}"
-        env:
-          FORK_PAT: ${{ secrets.FORK_PAT }}
-
       - name: Push to garden fork
         run: |
           git config --global user.name "gardenee"
           git config --global user.email "snnjjang@naver.com"
           git remote add fork https://x-access-token:${{ secrets.FORK_PAT }}@github.com/gardenee/ckz-front.git
           git push fork main --force
+        env:
+          FORK_PAT: ${{ secrets.FORK_PAT }}
