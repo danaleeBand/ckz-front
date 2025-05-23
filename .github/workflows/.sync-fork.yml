@@ -11,6 +11,9 @@ jobs:
         with:
           token: ${{ secrets.FORK_PAT }}
 
+      - name: Remove workflow folder before pushing
+        run: rm -rf .github
+
       - name: Set remote and force push to fork
         env:
           PAT: ${{ secrets.FORK_PAT }}
