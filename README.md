@@ -2,7 +2,7 @@
 
 ---
 
-## 🥊 프로젝트 초기 실행
+## 프로젝트 초기 실행
 
 1. git repository clone
 
