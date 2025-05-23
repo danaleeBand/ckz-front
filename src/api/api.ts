@@ -12,6 +12,7 @@ type ApiRequestOptions = {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   data?: unknown;
   params?: unknown;
+  timeout?: number;
 };
 
 const apiRequest = async <T = unknown>(
