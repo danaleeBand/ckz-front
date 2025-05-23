@@ -22,7 +22,6 @@ export const AuthRoute = () => {
 
     // 소셜 인증 code로 jwt 토큰 가져오기
     const tokenResponse = await getAuthToken(provider, code);
-    console.log(tokenResponse); // TODO: 삭제
     if (tokenResponse.success) {
       const { accessToken } = tokenResponse.data as AuthTokenGetResponse;
       setAccessToken(accessToken);
